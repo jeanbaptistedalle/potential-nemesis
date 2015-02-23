@@ -16,12 +16,14 @@ import org.xml.sax.InputSource;
 
 public class DocParser {
 
-	private static final String AP_PATH = "testing";
+	private static final String AP_PATH = "AP";
 	private static final String TEXT_TAG_NAME = "TEXT";
+
+	private List<String> listText;
 
 	public DocParser() {
 		try {
-			final List<String> listText = new ArrayList<String>();
+			listText = new ArrayList<String>();
 			final File[] dir = new File(AP_PATH).listFiles();
 			for (File f : dir) {
 				FileReader fr = new FileReader(f);
@@ -41,21 +43,26 @@ public class DocParser {
 					everything = sb.toString();
 				}
 
-				String xmlstring = "<?xml version=\"1.0\"?>\n<docs>"
-						+ everything + "</docs>";
+				String xmlstring = "<?xml version=\"1.0\"?>\n<docs>" + everything + "</docs>";
 
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory
-						.newInstance();
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document d = dBuilder.parse(new InputSource(new StringReader( xmlstring)));
+				Document d = dBuilder.parse(new InputSource(new StringReader(xmlstring)));
 				NodeList nl = d.getElementsByTagName(TEXT_TAG_NAME);
 				for (int i = 0; i < nl.getLength(); i++) {
 					listText.add(nl.item(i).getTextContent());
 				}
 			}
-			System.out.println(listText);
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public List<String> getListText() {
+		return listText;
+	}
+
+	public void setListText(List<String> listText) {
+		this.listText = listText;
 	}
 }

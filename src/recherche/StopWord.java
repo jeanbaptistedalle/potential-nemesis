@@ -17,7 +17,7 @@ public class StopWord {
 			stopWords = new ArrayList<String>();
 			final BufferedReader f = new BufferedReader(new FileReader(STOP_WORDS_PATH));
 			String line = f.readLine();
-			while(line != null){
+			while (line != null) {
 				stopWords.add(line);
 				line = f.readLine();
 			}
@@ -35,19 +35,36 @@ public class StopWord {
 		return stopWords.contains(word);
 	}
 	
-	public String filter(final String text){
-		StringBuilder stringBuilder = new StringBuilder();
-		StringTokenizer st = new StringTokenizer(text);
-		while(st.hasMoreElements()){
+	public List<String> filterTexts(final List<String> texts){
+		final List<String> returnList = new ArrayList<String>();
+		for(String text : texts){
+			returnList.add(filter(text));
+		}
+		return returnList;
+	}
+	
+	private String filter(final String text) {
+		final StringBuilder stringBuilder = new StringBuilder();
+		String tempText = new String(text);
+		tempText = tempText.replaceAll("[^a-zA-Z0-9 ]", "");
+		final StringTokenizer st = new StringTokenizer(tempText);
+		boolean first = true;
+		while (st.hasMoreElements()) {
 			String token = st.nextToken();
-			if(!contains(token)){
+			if (!contains(token)) {
+				if (!first) {
+					stringBuilder.append(" ");
+				}
 				stringBuilder.append(token);
+				if (first) {
+					first = false;
+				}
 			}
 		}
 		return stringBuilder.toString();
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return stopWords.toString();
 	}
 }
