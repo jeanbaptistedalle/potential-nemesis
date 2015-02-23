@@ -2,6 +2,7 @@ package recherche;
 
 public class Main {
 	public static void main(String[] args) {
-		DocParser dp = new DocParser();
+		final StopWord sw = new StopWord();
+		final DocParser dp = new DocParser();
 	}
 }
