@@ -25,7 +25,7 @@ public class DocParser {
 	public DocParser() {
 		try {
 			listText = new ArrayList<String>();
-			final File[] dir = new File(AP_PATH).listFiles();
+			final File[] dir = new File(TESTING_AP_PATH).listFiles();
 			for (File f : dir) {
 				FileReader fr = new FileReader(f);
 

@@ -35,6 +35,7 @@ package recherche;
  */
 
 import java.io.*;
+import java.util.StringTokenizer;
 
 /**
  * Stemmer, implementing the Porter Stemming Algorithm
@@ -44,17 +45,44 @@ import java.io.*;
  * the various stem(something) methods.
  */
 
-class Stemmer {
+public class Stemmer {
 	private char[] b;
 	private int i, /* offset into b */
 	i_end, /* offset to end of stemmed word */
 	j, k;
 	private static final int INC = 50;
-	
-	private boolean lowercase = false;
+
+	private boolean lowercase = true;
 
 	/* unit of size whereby b is increased */
 	public Stemmer() {
+		reset();
+	}
+
+	public String stemText(final String text) {
+		final StringTokenizer stringTokenizer = new StringTokenizer(text);
+		final StringBuilder stringBuilder = new StringBuilder();
+		boolean first = true;
+		while (stringTokenizer.hasMoreElements()) {
+			reset();
+			final String token = stringTokenizer.nextToken();
+			if (!token.isEmpty()) {
+				for (int i = 0; i < token.length(); i++) {
+					add(token.charAt(i));
+				}
+				stem();
+				if(first){
+					first = false;
+				}else{
+					stringBuilder.append(" ");
+				}
+				stringBuilder.append(this.toString());
+			}
+		}
+		return stringBuilder.toString();
+	}
+
+	public void reset() {
 		b = new char[INC];
 		i = 0;
 		i_end = 0;
@@ -65,10 +93,9 @@ class Stemmer {
 	 * characters, you can call stem(void) to stem the word.
 	 */
 
-	public void add(char ch) {
-		if(this.haveToLowercase())
-		{
-			ch = Character.toLowerCase((char)ch);
+	private void add(char ch) {
+		if (this.haveToLowercase()) {
+			ch = Character.toLowerCase((char) ch);
 		}
 		if (i == b.length) {
 			char[] new_b = new char[i + INC];

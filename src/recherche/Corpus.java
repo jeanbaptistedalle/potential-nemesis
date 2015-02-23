@@ -2,7 +2,7 @@ package recherche;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashMap;	
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -41,6 +41,11 @@ public class Corpus {
 			}
 
 		}
+	}
+	
+	public String executeQuery(final String query){
+		String text = null;
+		return null;
 	}
 
 	public Map<Integer, String> getTexts() {
