@@ -17,6 +17,7 @@ import org.xml.sax.InputSource;
 public class DocParser {
 
 	private static final String AP_PATH = "AP";
+	private static final String TESTING_AP_PATH = "Testing";
 	private static final String TEXT_TAG_NAME = "TEXT";
 
 	private List<String> listText;
