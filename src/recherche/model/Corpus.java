@@ -1,18 +1,19 @@
 package recherche.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Corpus {
 
 	/*
 	 * Dans cette map, chaque mot est associé à un docPosition, qui contient le
-	 * fichier dans lequel ce mot a été trouvé.
-	 * TODO : Ajouter la position du mot dans le fichier en question
+	 * fichier dans lequel ce mot a été trouvé. TODO : Ajouter la position du
+	 * mot dans le fichier en question
 	 */
 	private Map<String, List<DocPosition>> corpus;
 
@@ -21,7 +22,8 @@ public class Corpus {
 		this.corpus = new HashMap<String, List<DocPosition>>();
 		Long cpt = 0L;
 		for (final Text text : listTexts) {
-			final StringTokenizer stopTokenizer = new StringTokenizer(text.getStoppedText());
+			final StringTokenizer stopTokenizer = new StringTokenizer(
+					text.getStoppedText());
 			while (stopTokenizer.hasMoreTokens()) {
 				String token = stopTokenizer.nextToken();
 				String stemmedToken = stemmer.stemWord(token);
@@ -48,8 +50,23 @@ public class Corpus {
 	}
 
 	public List<String> executeQuery(final String query) {
-		// TODO
-		return null;
+
+		StringTokenizer elements = new StringTokenizer(query);
+
+		Set<String> filepaths = new HashSet<String>();
+
+		while (elements.hasMoreElements()) {
+			String elt = (String) elements.nextElement();
+			if(corpus.containsKey(elt))
+			{
+				for(DocPosition dp : corpus.get(elt) )
+				{
+					filepaths.add(dp.getFilePath());
+				}
+			}
+		}
+
+		return new ArrayList<String>(filepaths);
 	}
 
 	public String toString() {
