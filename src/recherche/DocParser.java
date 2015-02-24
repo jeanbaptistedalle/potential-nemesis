@@ -19,13 +19,23 @@ public class DocParser {
 	private static final String AP_PATH = "AP";
 	private static final String TESTING_AP_PATH = "Testing";
 	private static final String TEXT_TAG_NAME = "TEXT";
-
+	
+	private boolean test = false;
 	private List<String> listText;
 
+	public DocParser(final boolean test){
+		this.test = test;
+	}
+	
 	public DocParser() {
 		try {
 			listText = new ArrayList<String>();
-			final File[] dir = new File(TESTING_AP_PATH).listFiles();
+			final File[] dir;
+			if(test){
+				dir = new File(TESTING_AP_PATH).listFiles();
+			}else{
+				dir = new File(AP_PATH).listFiles();
+			}
 			for (File f : dir) {
 				FileReader fr = new FileReader(f);
 

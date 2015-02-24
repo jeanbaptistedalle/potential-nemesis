@@ -43,7 +43,7 @@ public class StopWord {
 		return returnList;
 	}
 	
-	private String filter(final String text) {
+	public String filter(final String text) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		String tempText = new String(text);
 		tempText = tempText.replaceAll("[^a-zA-Z0-9 ]", "");

@@ -42,11 +42,6 @@ public class Corpus {
 
 		}
 	}
-	
-	public String executeQuery(final String query){
-		String text = null;
-		return null;
-	}
 
 	public Map<Integer, String> getTexts() {
 		return texts;
@@ -66,5 +61,10 @@ public class Corpus {
 
 	public String toString() {
 		return texts + "\n" + corpus;
+	}
+
+	public String executeQuery(final String query) {
+		//TODO
+		return null;
 	}
 }
