@@ -1,4 +1,4 @@
-package recherche;
+package recherche.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,8 +13,11 @@ public class StopWord {
 	private List<String> stopWords;
 
 	public StopWord() {
+		stopWords = new ArrayList<String>();
+	}
+
+	public void start() {
 		try {
-			stopWords = new ArrayList<String>();
 			final BufferedReader f = new BufferedReader(new FileReader(STOP_WORDS_PATH));
 			String line = f.readLine();
 			while (line != null) {
@@ -25,6 +28,7 @@ public class StopWord {
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
+
 	}
 
 	public StopWord(final List<String> stopWords) {
@@ -34,15 +38,14 @@ public class StopWord {
 	public boolean contains(final String word) {
 		return stopWords.contains(word);
 	}
-	
-	public List<String> filterTexts(final List<String> texts){
-		final List<String> returnList = new ArrayList<String>();
-		for(String text : texts){
-			returnList.add(filter(text));
+
+	public List<Text> filterTexts(final List<Text> texts) {
+		for (final Text text : texts) {
+			text.setStoppedText(filter(text.getOriginalText()));
 		}
-		return returnList;
+		return texts;
 	}
-	
+
 	public String filter(final String text) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		String tempText = new String(text);

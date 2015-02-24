@@ -1,4 +1,4 @@
-package recherche;
+package recherche.model;
 
 /*
 
@@ -71,15 +71,26 @@ public class Stemmer {
 					add(token.charAt(i));
 				}
 				stem();
-				if(first){
+				if (first) {
 					first = false;
-				}else{
+				} else {
 					stringBuilder.append(" ");
 				}
 				stringBuilder.append(this.toString());
 			}
 		}
 		return stringBuilder.toString();
+	}
+
+	public String stemWord(final String word) {
+		reset();
+		if (!word.isEmpty()) {
+			for (int i = 0; i < word.length(); i++) {
+				add(word.charAt(i));
+			}
+			stem();
+		}
+		return toString();
 	}
 
 	public void reset() {

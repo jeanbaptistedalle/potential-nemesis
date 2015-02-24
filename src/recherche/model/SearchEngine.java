@@ -1,10 +1,11 @@
-package recherche;
+package recherche.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchEngine {
 
+	private static SearchEngine INSTANCE;
 	private static final String QUERY_TEST = "Document will discuss allegations, or measures being taken"
 			+ " against, corrupt public officials of any governmental jurisdiction worldwide. ";
 
@@ -12,19 +13,17 @@ public class SearchEngine {
 	private DocParser docParser;
 	private Stemmer stemmer;
 	private Corpus corpus;
-	private List<String> texts;
 
-	public SearchEngine() {
+	private SearchEngine() {
 		stopWord = new StopWord();
+		stopWord.start();
 		docParser = new DocParser(true);
 		stemmer = new Stemmer();
-		texts = new ArrayList<String>();
-		final List<String> textsBruts = docParser.getListText();
-		final List<String> textsFlitres = stopWord.filterTexts(textsBruts);
-		for (final String text : textsFlitres) {
-			texts.add(stemmer.stemText(text));
-		}
-		corpus = new Corpus(texts);
+		final List<Text> textsBruts = docParser.start();
+		final List<Text> textsFiltres = stopWord.filterTexts(textsBruts);
+		
+		corpus = new Corpus(textsFiltres);
+		System.out.println(corpus);
 	}
 	
 	public String executeQuery(final String query){
@@ -33,9 +32,16 @@ public class SearchEngine {
 		final String text = corpus.executeQuery(queryStem);
 		return text;
 	}
+	
+	public static SearchEngine getInstance(){
+		if(INSTANCE == null){
+			INSTANCE = new SearchEngine();
+		}
+		return INSTANCE;
+	}
 
 	public static void main(String[] args) {
-		final SearchEngine searchEngine = new SearchEngine();
-		searchEngine.executeQuery(QUERY_TEST);
+		final SearchEngine searchEngine = SearchEngine.getInstance();
+//		searchEngine.executeQuery(QUERY_TEST);
 	}
 }
