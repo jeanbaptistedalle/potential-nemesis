@@ -45,12 +45,23 @@ public class StopWord {
 		}
 		return texts;
 	}
+	
+	public List<Text> deleteSpecialChar(final List<Text> texts){
+		for(Text text : texts){
+			text.setOriginalText(deleteSpecialChar(text.getOriginalText()));
+		}
+		return texts;
+	}
+	
+	public String deleteSpecialChar(final String text){
+		String tempText = new String(text);
+		tempText = tempText.replaceAll("[^a-zA-Z0-9 ]", "");
+		return tempText;
+	}
 
 	public String filter(final String text) {
 		final StringBuilder stringBuilder = new StringBuilder();
-		String tempText = new String(text);
-		tempText = tempText.replaceAll("[^a-zA-Z0-9 ]", "");
-		final StringTokenizer st = new StringTokenizer(tempText);
+		final StringTokenizer st = new StringTokenizer(text);
 		boolean first = true;
 		while (st.hasMoreElements()) {
 			String token = st.nextToken();

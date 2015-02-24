@@ -20,17 +20,22 @@ public class SearchEngine {
 		docParser = new DocParser(true);
 		stemmer = new Stemmer();
 		final List<Text> textsBruts = docParser.start();
-		final List<Text> textsFiltres = stopWord.filterTexts(textsBruts);
+		final List<Text> textSansPonctuation = stopWord.deleteSpecialChar(textsBruts);
+		final List<Text> textsFiltres = stopWord.filterTexts(textSansPonctuation);
 		
 		corpus = new Corpus(textsFiltres);
 		System.out.println(corpus);
 	}
 	
-	public String executeQuery(final String query){
-		final String queryFiltre = stopWord.filter(query);
+	public List<String> executeQuery(final String query){
+		final String querySansPonctuation = stopWord.deleteSpecialChar(query);
+		final String queryLowerCase = querySansPonctuation.toLowerCase();
+		//TODO : gérer les opérateurs logique avant leur suppression
+		final String queryFiltre = stopWord.filter(queryLowerCase);
 		final String queryStem = stemmer.stemText(queryFiltre);
-		final String text = corpus.executeQuery(queryStem);
-		return text;
+		//TODO while sur chaque sous requete
+		final List<String> filePaths = corpus.executeQuery(queryStem);
+		return filePaths;
 	}
 	
 	public static SearchEngine getInstance(){
@@ -42,6 +47,6 @@ public class SearchEngine {
 
 	public static void main(String[] args) {
 		final SearchEngine searchEngine = SearchEngine.getInstance();
-//		searchEngine.executeQuery(QUERY_TEST);
+		searchEngine.executeQuery(QUERY_TEST);
 	}
 }
