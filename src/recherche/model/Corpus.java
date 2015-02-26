@@ -25,7 +25,6 @@ public class Corpus {
 	public void start(List<Text> listTexts) {
 		final Stemmer stemmer = new Stemmer();
 		this.corpus = new HashMap<String, List<DocPosition>>();
-		Long cptText = 0L;
 		Long cptMot = 0L;
 		for (final Text text : listTexts) {
 			final StringTokenizer stopTokenizer = new StringTokenizer(text.getText());
@@ -46,18 +45,17 @@ public class Corpus {
 								}
 							}
 							if (!find) {
-								list.add(new DocPosition(text.getTextPath(), cptText, cptMot));
+								list.add(new DocPosition(text.getTextPath(), cptMot));
 							}
 						} else {
 							final List<DocPosition> listDoc = new ArrayList<DocPosition>();
-							listDoc.add(new DocPosition(text.getTextPath(), cptText, cptMot));
+							listDoc.add(new DocPosition(text.getTextPath(), cptMot));
 							corpus.put(stemmedToken, listDoc);
 						}
 					}
 				}
 				cptMot++;
 			}
-			cptText++;
 			cptMot = 0L;
 		}
 	}

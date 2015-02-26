@@ -22,7 +22,7 @@ public class SearchEngine {
 		stopWord.start();
 		docParser = new DocParser();
 		stemmer = new Stemmer();
-		final List<Text> textsBruts = docParser.getDefaultTexts(true);
+		final List<Text> textsBruts = docParser.getDefaultTexts(false);
 		corpus = new Corpus(stopWord);
 		corpus.start(textsBruts);
 	}

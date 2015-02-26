@@ -6,18 +6,15 @@ import java.util.List;
 public class DocPosition {
 
 	private String filePath;
-	private Long docId;
 	private List<Long> positions;
 
-	public DocPosition(final String filePath, final Long docId) {
+	public DocPosition(final String filePath) {
 		this.filePath = filePath;
-		this.docId = docId;
 		positions = new ArrayList<Long>();
 	}
 
-	public DocPosition(final String filePath, final Long docId, final Long position) {
+	public DocPosition(final String filePath, final Long position) {
 		this.filePath = filePath;
-		this.docId = docId;
 		positions = new ArrayList<Long>();
 		positions.add(position);
 	}
@@ -40,13 +37,5 @@ public class DocPosition {
 	
 	public String toString(){
 		return filePath + positions;
-	}
-
-	public Long getDocId() {
-		return docId;
-	}
-
-	public void setDocId(Long docId) {
-		this.docId = docId;
 	}
 }

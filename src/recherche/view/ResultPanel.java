@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.text.Highlighter;
 
 import recherche.model.Text;
 
@@ -35,7 +36,7 @@ public class ResultPanel extends JPanel {
 		this.setLayout(new GridBagLayout());
 		this.setAutoscrolls(true);
 		
-		JLabel jlabel = new JLabel("Aucune résultat, veuillez effectuer une recherche");
+		JLabel jlabel = new JLabel("Veuillez effectuer une recherche");
 		addComponent(jlabel);
 	}
 	
@@ -49,7 +50,9 @@ public class ResultPanel extends JPanel {
 		result.setColumns(75);
 		result.setLineWrap(true);
 		result.setEditable(false);
-
+		final Highlighter resultHightlight = result.getHighlighter();
+		resultHightlight.removeAllHighlights();
+		//TODO : ajouter surlignement
 
 		final JButton button = new JButton("Ouvrir");
 		button.addActionListener(new ActionListener() {
