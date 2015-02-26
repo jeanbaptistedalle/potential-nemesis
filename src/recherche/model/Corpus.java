@@ -85,6 +85,17 @@ public class Corpus {
 	public void setCorpus(Map<String, List<DocPosition>> corpus) {
 		this.corpus = corpus;
 	}
+	
+	public Integer getSize(){
+		int count = 0;
+		for(String key : corpus.keySet()){
+			final List<DocPosition> docPositions = corpus.get(key);
+			for(final DocPosition docPosition : docPositions){
+				count+=docPosition.getSize();
+			}
+		}
+		return count;
+	}
 
 	public String toString() {
 		return corpus.toString();

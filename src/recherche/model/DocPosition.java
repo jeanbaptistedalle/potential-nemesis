@@ -38,4 +38,8 @@ public class DocPosition {
 	public String toString(){
 		return filePath + positions;
 	}
+	
+	public Integer getSize(){
+		return positions.size();
+	}
 }
