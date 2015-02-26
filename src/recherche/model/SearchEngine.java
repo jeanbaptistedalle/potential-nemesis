@@ -18,7 +18,7 @@ public class SearchEngine {
 	private Stemmer stemmer;
 	private Corpus corpus;
 
-	private SearchEngine() {
+	private SearchEngine(final boolean test) {
 		stopWord = new StopWord();
 		stopWord.start();
 		docParser = new DocParser();
@@ -28,15 +28,19 @@ public class SearchEngine {
 		corpus.start(textsBruts);
 	}
 
+	private SearchEngine() {
+		this(false);
+	}
+
 	public List<String> executeQuery(final String query) {
 		final String querySansPonctuation = stopWord.deleteSpecialChar(query);
 		final String queryLowerCase = querySansPonctuation.toLowerCase();
-		Query queryObject = new Query();
+		final Query queryObject = new Query();
 		queryObject.fromString(queryLowerCase);
 
 		final List<List<String>> filePathsList = new ArrayList<List<String>>();
 
-		for (String elt : queryObject.getSubQueries()) {
+		for (final String elt : queryObject.getSubQueries()) {
 			final String queryFiltre = stopWord.filter(elt);
 			final String queryStem = stemmer.stemText(queryFiltre);
 			filePathsList.add(corpus.executeQuery(queryStem));
