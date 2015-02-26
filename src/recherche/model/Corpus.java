@@ -78,6 +78,14 @@ public class Corpus {
 		return new ArrayList<String>(filepaths);
 	}
 
+	public Map<String, List<DocPosition>> getCorpus() {
+		return corpus;
+	}
+
+	public void setCorpus(Map<String, List<DocPosition>> corpus) {
+		this.corpus = corpus;
+	}
+
 	public String toString() {
 		return corpus.toString();
 	}

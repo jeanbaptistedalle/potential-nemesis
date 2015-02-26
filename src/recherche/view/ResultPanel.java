@@ -32,7 +32,6 @@ public class ResultPanel extends JPanel {
 
 	public ResultPanel() {
 		resultList = new ArrayList<Component>();
-		this.setPreferredSize(new Dimension(200, 300));
 		this.setLayout(new GridBagLayout());
 		this.setAutoscrolls(true);
 		

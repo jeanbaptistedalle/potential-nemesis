@@ -15,14 +15,18 @@ public class MainPanel extends JPanel {
 
 	private SearchPanel searchPanel;
 	private ResultPanel resultPanel;
+	private JScrollPane scrollPane;
 
 	public MainPanel() {
 		searchPanel = new SearchPanel();
 		resultPanel = new ResultPanel();
+		scrollPane = new JScrollPane();
 		
+		scrollPane.setViewportView(resultPanel);
+		this.setPreferredSize(new Dimension(1000, 500));
 		this.setLayout(new BorderLayout());
 		this.add(searchPanel, BorderLayout.NORTH);
-		this.add(resultPanel, BorderLayout.SOUTH);
+		this.add(scrollPane, BorderLayout.CENTER);
 	}
 
 	public SearchPanel getSearchPanel() {
