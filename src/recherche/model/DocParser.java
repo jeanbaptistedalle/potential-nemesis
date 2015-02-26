@@ -16,7 +16,7 @@ public class DocParser {
 	private static final String TESTING_AP_PATH = "Testing";
 	private static final String TEXT_TAG_NAME = "TEXT";
 
-	private boolean test = false;
+	private boolean test;
 	private List<Text> texts;
 
 	public DocParser(final boolean test) {
@@ -24,9 +24,10 @@ public class DocParser {
 	}
 
 	public DocParser() {
+		this.test = false;
 	}
-	
-	public List<Text> start(){
+
+	public List<Text> start() {
 		try {
 			texts = new ArrayList<Text>();
 			final File[] dir;

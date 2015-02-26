@@ -1,4 +1,4 @@
-package launcher;
+package recherche.launcher;
 
 import recherche.model.SearchEngine;
 import recherche.view.MainFrame;

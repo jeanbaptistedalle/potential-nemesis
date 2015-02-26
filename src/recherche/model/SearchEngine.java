@@ -20,16 +20,11 @@ public class SearchEngine {
 	private SearchEngine() {
 		stopWord = new StopWord();
 		stopWord.start();
-		docParser = new DocParser(true);
+		docParser = new DocParser(false);
 		stemmer = new Stemmer();
 		final List<Text> textsBruts = docParser.start();
-		final List<Text> textSansPonctuation = stopWord
-				.deleteSpecialChar(textsBruts);
-		final List<Text> textsFiltres = stopWord
-				.filterTexts(textSansPonctuation);
-
-		corpus = new Corpus(textsFiltres);
-		System.out.println(corpus);
+		corpus = new Corpus(stopWord);
+		corpus.start(textsBruts);
 	}
 
 	public List<String> executeQuery(final String query) {
@@ -90,6 +85,10 @@ public class SearchEngine {
 
 		return filePathsList.get(0);
 	}
+	
+	public String toString(){
+		return corpus.toString();
+	}
 
 	public static SearchEngine getInstance() {
 		if (INSTANCE == null) {
@@ -100,6 +99,6 @@ public class SearchEngine {
 
 	public static void main(String[] args) {
 		final SearchEngine searchEngine = SearchEngine.getInstance();
-		searchEngine.executeQuery(QUERY_TEST);
+//		searchEngine.executeQuery(QUERY_TEST);
 	}
 }

@@ -41,14 +41,14 @@ public class StopWord {
 
 	public List<Text> filterTexts(final List<Text> texts) {
 		for (final Text text : texts) {
-			text.setStoppedText(filter(text.getOriginalText()));
+			text.setText(filter(text.getText()));
 		}
 		return texts;
 	}
 	
 	public List<Text> deleteSpecialChar(final List<Text> texts){
 		for(Text text : texts){
-			text.setOriginalText(deleteSpecialChar(text.getOriginalText()));
+			text.setText(deleteSpecialChar(text.getText()));
 		}
 		return texts;
 	}

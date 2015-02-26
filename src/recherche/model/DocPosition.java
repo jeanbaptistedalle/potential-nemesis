@@ -15,6 +15,13 @@ public class DocPosition {
 		positions = new ArrayList<Long>();
 	}
 
+	public DocPosition(final String filePath, final Long docId, final Long position) {
+		this.filePath = filePath;
+		this.docId = docId;
+		positions = new ArrayList<Long>();
+		positions.add(position);
+	}
+
 	public String getFilePath() {
 		return filePath;
 	}
@@ -32,7 +39,7 @@ public class DocPosition {
 	}
 	
 	public String toString(){
-		return filePath;
+		return filePath + positions;
 	}
 
 	public Long getDocId() {

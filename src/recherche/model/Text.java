@@ -4,35 +4,30 @@ public class Text {
 
 	private String textPath;
 
-	private String stoppedText;
-	private String originalText;
+	private String text;
 
 	public Text(final String textPath, final String text) {
 		this.textPath = textPath;
-		this.originalText = text;
+		this.text = text;
 	}
 
 	public String getTextPath() {
 		return textPath;
 	}
 
-	public void setTextPath(String textPath) {
+	public void setTextPath(final String textPath) {
 		this.textPath = textPath;
 	}
 
-	public String getStoppedText() {
-		return stoppedText;
+	public String getText() {
+		return text;
 	}
 
-	public void setStoppedText(String stoppedText) {
-		this.stoppedText = stoppedText;
+	public void setText(final String text) {
+		this.text = text;
 	}
-
-	public String getOriginalText() {
-		return originalText;
-	}
-
-	public void setOriginalText(String originalText) {
-		this.originalText = originalText;
+	
+	public String toString(){
+		return text;
 	}
 }
