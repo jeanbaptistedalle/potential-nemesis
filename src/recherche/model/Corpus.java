@@ -68,36 +68,36 @@ public class Corpus {
 		}
 	}
 
-	public List<String> executeQuery(final String query) {
+	public Solution executeQuery(final String query) {
 
 		StringTokenizer elements = new StringTokenizer(query);
 
-		Set<String> filepaths = new HashSet<String>();
+		Solution filepaths = new Solution();
 
 		// if there is no token, so there is no result
 
 		if (!elements.hasMoreTokens())
-			return new ArrayList<String>(filepaths);
+			return new Solution();
 
 		String elt1 = (String) elements.nextElement();
 		if (corpus.containsKey(elt1)) {
 			for (DocPosition dp : corpus.get(elt1)) {
-				filepaths.add(dp.getFilePath());
+				filepaths.add(dp.getFilePath(), dp.getPositions().size());
 			}
 		}
 
 		while (elements.hasMoreElements()) {
 			String elt = (String) elements.nextElement();
-			Set<String> tmp = new HashSet<String>();
+			Solution tmp = new Solution();
 			if (corpus.containsKey(elt)) {
 				for (DocPosition dp : corpus.get(elt)) {
-					tmp.add(dp.getFilePath());
+					tmp.add(dp.getFilePath(), dp.getPositions().size());
 				}
 			}
-			filepaths.retainAll(tmp);
+			filepaths = filepaths.retainAll(tmp);
 		}
 
-		return new ArrayList<String>(filepaths);
+		return filepaths;
 	}
 
 	public Map<String, List<DocPosition>> getCorpus() {

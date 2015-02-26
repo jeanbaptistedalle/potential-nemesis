@@ -2,7 +2,6 @@ package recherche.view;
 
 import java.awt.Component;
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;

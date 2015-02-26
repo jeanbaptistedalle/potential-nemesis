@@ -9,8 +9,10 @@ import java.util.Set;
 public class SearchEngine {
 
 	private static SearchEngine INSTANCE;
-//	private static final String QUERY_TEST = "Document will discuss allegations, or measures being taken"
-//			+ " against, corrupt public officials of any governmental jurisdiction worldwide. ";
+	// private static final String QUERY_TEST =
+	// "Document will discuss allegations, or measures being taken"
+	// +
+	// " against, corrupt public officials of any governmental jurisdiction worldwide. ";
 	private static final String QUERY_TEST = "darling not rolling";
 
 	private StopWord stopWord;
@@ -34,13 +36,13 @@ public class SearchEngine {
 		this(true);
 	}
 
-	public List<String> executeQuery(final String query) {
+	public Solution executeQuery(final String query) {
 		final String querySansPonctuation = stopWord.deleteSpecialChar(query);
 		final String queryLowerCase = querySansPonctuation.toLowerCase();
 		final Query queryObject = new Query();
 		queryObject.fromString(queryLowerCase);
 
-		final List<List<String>> filePathsList = new ArrayList<List<String>>();
+		final List<Solution> filePathsList = new ArrayList<Solution>();
 
 		for (final String elt : queryObject.getSubQueries()) {
 			final String queryFiltre = stopWord.filter(elt);
@@ -54,45 +56,24 @@ public class SearchEngine {
 		Collections.reverse(operators);
 
 		for (int i = operators.size() - 1; i >= 0; i--) {
-			List<String> first = filePathsList.get(i + 1);
-			List<String> second = filePathsList.get(i);
+			Solution first = filePathsList.get(i + 1);
+			Solution second = filePathsList.get(i);
 			filePathsList.remove(i + 1);
 			filePathsList.remove(i);
 
 			if (operators.get(i).equals("and")) {
-				List<String> list = new ArrayList<String>();
-
-				for (String t : first) {
-					if (second.contains(t)) {
-						list.add(t);
-					}
-				}
-				filePathsList.add(list);
-
+				filePathsList.add(first.retainAll(second));
 			} else if (operators.get(i).equals("or")) {
-				Set<String> set = new HashSet<String>();
-
-				set.addAll(first);
-				set.addAll(second);
-
-				filePathsList.add(new ArrayList<String>(set));
-
+				filePathsList.add(first.union(second));
 			} else if (operators.get(i).equals("not")) {
-				List<String> list = new ArrayList<String>();
-
-				for (String t : first) {
-					if (!second.contains(t)) {
-						list.add(t);
-					}
-				}
-				filePathsList.add(list);
+				filePathsList.add(first.diff(second));
 			}
 
 		}
-		
-		if(filePathsList.size() == 0)
-			return new ArrayList<String>();
-		List<String> ret = filePathsList.get(0);
+
+		if (filePathsList.size() == 0)
+			return new Solution();
+		Solution ret = filePathsList.get(0);
 		return ret;
 	}
 
@@ -153,7 +134,7 @@ public class SearchEngine {
 
 	public static void main(String[] args) {
 		final SearchEngine searchEngine = SearchEngine.getInstance();
-		List<String> out = searchEngine.executeQuery(QUERY_TEST);
+		Solution out = searchEngine.executeQuery(QUERY_TEST);
 		System.out.println(out);
 	}
 }
