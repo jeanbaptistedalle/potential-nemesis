@@ -61,6 +61,8 @@ public class SearchEngine {
 			filePathsList.remove(i + 1);
 			filePathsList.remove(i);
 
+			// TODO retirer les occurences des "not"
+			
 			if (operators.get(i).equals("and")) {
 				filePathsList.add(first.retainAll(second));
 			} else if (operators.get(i).equals("or")) {
