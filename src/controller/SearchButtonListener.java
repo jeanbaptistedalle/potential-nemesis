@@ -16,14 +16,11 @@ public class SearchButtonListener implements ActionListener {
 
 	public void actionPerformed(final ActionEvent arg0) {
 		final MainPanel mainPanel = MainFrame.getInstance().getMainPanel();
-		// final List<String> listFilePath =
-		// SearchEngine.getInstance().executeQuery(
-		// mainPanel.getSearchPanel().getSearchField().getText());
+		 final List<String> listFilePath = SearchEngine.getInstance().executeQuery(
+		 mainPanel.getSearchPanel().getSearchField().getText());
 		final SearchEngine searchEngine = SearchEngine.getInstance();
-		// final List<Text> listText =
-		// searchEngine.getFilesFromFilePaths(listFilePath);
-		//TODO : a remplacer par le code ci-dessous (code de test)
-		final List<Text> listText = searchEngine.getDocParser().getDefaultTexts(true);
+		 final List<Text> listText = searchEngine.getFilesFromFilePaths(listFilePath);
+//		final List<Text> listText = searchEngine.getDocParser().getDefaultTexts(SearchEngine.getInstance().isDefText());
 		mainPanel.getResultPanel().clearResult();
 		if (listText == null || listText.size() == 0) {
 			mainPanel.getResultPanel().noResult();

@@ -17,19 +17,21 @@ public class SearchEngine {
 	private DocParser docParser;
 	private Stemmer stemmer;
 	private Corpus corpus;
+	private boolean DefText;
 
 	private SearchEngine(final boolean test) {
 		stopWord = new StopWord();
 		stopWord.start();
 		docParser = new DocParser();
 		stemmer = new Stemmer();
-		final List<Text> textsBruts = docParser.getDefaultTexts(true);
+		DefText = test;
+		final List<Text> textsBruts = docParser.getDefaultTexts(DefText);
 		corpus = new Corpus(stopWord);
 		corpus.start(textsBruts);
 	}
 
 	private SearchEngine() {
-		this(false);
+		this(true);
 	}
 
 	public List<String> executeQuery(final String query) {
@@ -132,6 +134,14 @@ public class SearchEngine {
 
 	public void setCorpus(Corpus corpus) {
 		this.corpus = corpus;
+	}
+
+	public boolean isDefText() {
+		return DefText;
+	}
+
+	public void setDefText(boolean defText) {
+		DefText = defText;
 	}
 
 	public static SearchEngine getInstance() {
