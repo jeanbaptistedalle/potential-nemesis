@@ -30,6 +30,8 @@ public class Query {
 				tmp += " " + token.toLowerCase();
 			}
 		}
+		if(!tmp.equals(""))
+			subQueries.add(tmp);
 	}
 
 	public ArrayList<String> getSubQueries() {
@@ -46,6 +48,11 @@ public class Query {
 
 	public void setOperators(ArrayList<String> operators) {
 		this.operators = operators;
+	}
+	
+	public String toString()
+	{
+		return "" + subQueries + "\n" + operators;
 	}
 
 }

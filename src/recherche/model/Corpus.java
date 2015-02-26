@@ -27,29 +27,37 @@ public class Corpus {
 		this.corpus = new HashMap<String, List<DocPosition>>();
 		Long cptMot = 0L;
 		for (final Text text : listTexts) {
-			final StringTokenizer stopTokenizer = new StringTokenizer(text.getText());
+			final StringTokenizer stopTokenizer = new StringTokenizer(
+					text.getText());
 			while (stopTokenizer.hasMoreTokens()) {
 				final String token = stopTokenizer.nextToken();
-				final String tokenSansPonctuation = stopWord.deleteSpecialChar(token);
-				if (tokenSansPonctuation != null && !tokenSansPonctuation.isEmpty()) {
-					final String stemmedToken = stemmer.stemWord(tokenSansPonctuation);
+				final String tokenSansPonctuation = stopWord
+						.deleteSpecialChar(token);
+				if (tokenSansPonctuation != null
+						&& !tokenSansPonctuation.isEmpty()) {
+					final String stemmedToken = stemmer
+							.stemWord(tokenSansPonctuation);
 					if (!stopWord.contains(stemmedToken)) {
 						if (corpus.containsKey(stemmedToken)) {
-							final List<DocPosition> list = corpus.get(stemmedToken);
+							final List<DocPosition> list = corpus
+									.get(stemmedToken);
 							boolean find = false;
 							for (final DocPosition doc : list) {
-								if (doc.getFilePath().equals(text.getTextPath())) {
+								if (doc.getFilePath()
+										.equals(text.getTextPath())) {
 									find = true;
 									doc.getPositions().add(cptMot);
 									break;
 								}
 							}
 							if (!find) {
-								list.add(new DocPosition(text.getTextPath(), cptMot));
+								list.add(new DocPosition(text.getTextPath(),
+										cptMot));
 							}
 						} else {
 							final List<DocPosition> listDoc = new ArrayList<DocPosition>();
-							listDoc.add(new DocPosition(text.getTextPath(), cptMot));
+							listDoc.add(new DocPosition(text.getTextPath(),
+									cptMot));
 							corpus.put(stemmedToken, listDoc);
 						}
 					}
@@ -66,13 +74,27 @@ public class Corpus {
 
 		Set<String> filepaths = new HashSet<String>();
 
+		// if there is no token, so there is no result
+
+		if (!elements.hasMoreTokens())
+			return new ArrayList<String>(filepaths);
+
+		String elt1 = (String) elements.nextElement();
+		if (corpus.containsKey(elt1)) {
+			for (DocPosition dp : corpus.get(elt1)) {
+				filepaths.add(dp.getFilePath());
+			}
+		}
+
 		while (elements.hasMoreElements()) {
 			String elt = (String) elements.nextElement();
+			Set<String> tmp = new HashSet<String>();
 			if (corpus.containsKey(elt)) {
 				for (DocPosition dp : corpus.get(elt)) {
-					filepaths.add(dp.getFilePath());
+					tmp.add(dp.getFilePath());
 				}
 			}
+			filepaths.retainAll(tmp);
 		}
 
 		return new ArrayList<String>(filepaths);

@@ -9,8 +9,9 @@ import java.util.Set;
 public class SearchEngine {
 
 	private static SearchEngine INSTANCE;
-	private static final String QUERY_TEST = "Document will discuss allegations, or measures being taken"
-			+ " against, corrupt public officials of any governmental jurisdiction worldwide. ";
+//	private static final String QUERY_TEST = "Document will discuss allegations, or measures being taken"
+//			+ " against, corrupt public officials of any governmental jurisdiction worldwide. ";
+	private static final String QUERY_TEST = "darling not rolling";
 
 	private StopWord stopWord;
 	private DocParser docParser;
@@ -22,7 +23,7 @@ public class SearchEngine {
 		stopWord.start();
 		docParser = new DocParser();
 		stemmer = new Stemmer();
-		final List<Text> textsBruts = docParser.getDefaultTexts(false);
+		final List<Text> textsBruts = docParser.getDefaultTexts(true);
 		corpus = new Corpus(stopWord);
 		corpus.start(textsBruts);
 	}
@@ -82,8 +83,11 @@ public class SearchEngine {
 			}
 
 		}
-
-		return filePathsList.get(0);
+		
+		if(filePathsList.size() == 0)
+			return new ArrayList<String>();
+		List<String> ret = filePathsList.get(0);
+		return ret;
 	}
 
 	public List<Text> getFilesFromFilePaths(final List<String> listFilePath) {
@@ -135,6 +139,7 @@ public class SearchEngine {
 
 	public static void main(String[] args) {
 		final SearchEngine searchEngine = SearchEngine.getInstance();
-		// searchEngine.executeQuery(QUERY_TEST);
+		List<String> out = searchEngine.executeQuery(QUERY_TEST);
+		System.out.println(out);
 	}
 }
