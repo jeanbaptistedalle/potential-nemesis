@@ -18,14 +18,23 @@ public class MainFrame extends JFrame {
 		this.setTitle(FRAME_TITLE);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+		this.setResizable(false);
 		this.add(mainPanel);
 		this.pack();
 	}
-	
-	public static MainFrame getInstance(){
-		if(INSTANCE == null){
+
+	public static MainFrame getInstance() {
+		if (INSTANCE == null) {
 			INSTANCE = new MainFrame();
 		}
 		return INSTANCE;
+	}
+
+	public MainPanel getMainPanel() {
+		return mainPanel;
+	}
+
+	public void setMainPanel(MainPanel mainPanel) {
+		this.mainPanel = mainPanel;
 	}
 }

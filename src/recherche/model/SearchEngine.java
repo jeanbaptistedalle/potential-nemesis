@@ -20,9 +20,9 @@ public class SearchEngine {
 	private SearchEngine() {
 		stopWord = new StopWord();
 		stopWord.start();
-		docParser = new DocParser(false);
+		docParser = new DocParser();
 		stemmer = new Stemmer();
-		final List<Text> textsBruts = docParser.start();
+		final List<Text> textsBruts = docParser.getDefaultTexts(true);
 		corpus = new Corpus(stopWord);
 		corpus.start(textsBruts);
 	}
@@ -85,9 +85,45 @@ public class SearchEngine {
 
 		return filePathsList.get(0);
 	}
-	
-	public String toString(){
+
+	public List<Text> getFilesFromFilePaths(final List<String> listFilePath) {
+		return docParser.getTexts(listFilePath);
+	}
+
+	public String toString() {
 		return corpus.toString();
+	}
+
+	public StopWord getStopWord() {
+		return stopWord;
+	}
+
+	public void setStopWord(StopWord stopWord) {
+		this.stopWord = stopWord;
+	}
+
+	public DocParser getDocParser() {
+		return docParser;
+	}
+
+	public void setDocParser(DocParser docParser) {
+		this.docParser = docParser;
+	}
+
+	public Stemmer getStemmer() {
+		return stemmer;
+	}
+
+	public void setStemmer(Stemmer stemmer) {
+		this.stemmer = stemmer;
+	}
+
+	public Corpus getCorpus() {
+		return corpus;
+	}
+
+	public void setCorpus(Corpus corpus) {
+		this.corpus = corpus;
 	}
 
 	public static SearchEngine getInstance() {
@@ -99,6 +135,6 @@ public class SearchEngine {
 
 	public static void main(String[] args) {
 		final SearchEngine searchEngine = SearchEngine.getInstance();
-//		searchEngine.executeQuery(QUERY_TEST);
+		// searchEngine.executeQuery(QUERY_TEST);
 	}
 }

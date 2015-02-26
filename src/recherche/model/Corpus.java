@@ -12,8 +12,7 @@ public class Corpus {
 
 	/*
 	 * Dans cette map, chaque mot est associé à un docPosition, qui contient le
-	 * fichier dans lequel ce mot a été trouvé. TODO : Ajouter la position du
-	 * mot dans le fichier en question
+	 * fichier dans lequel ce mot a été trouvé.
 	 */
 	private Map<String, List<DocPosition>> corpus;
 
