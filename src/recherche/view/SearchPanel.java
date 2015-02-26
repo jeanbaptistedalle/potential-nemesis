@@ -4,7 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import controller.SearchButtonListener;
+import recherche.controller.SearchButtonListener;
 
 public class SearchPanel extends JPanel {
 
