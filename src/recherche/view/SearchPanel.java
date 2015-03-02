@@ -1,6 +1,5 @@
 package recherche.view;
 
-import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
