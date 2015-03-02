@@ -1,13 +1,8 @@
 package recherche.view;
 
-import java.io.File;
-import java.net.MalformedURLException;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import com.inet.jortho.SpellChecker;
 
 import recherche.controller.SearchButtonListener;
 
@@ -24,12 +19,6 @@ public class SearchPanel extends JPanel {
 
 	public SearchPanel() {
 		searchField = new JTextField();
-		try {
-			SpellChecker.registerDictionaries(new File("dictionary_en_2015_03.zip").toURI().toURL(), "en");
-			SpellChecker.register(searchField);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
 		searchField.setColumns(75);
 		submitButton = new JButton("Rechercher");
 		searchButtonListener = new SearchButtonListener();
