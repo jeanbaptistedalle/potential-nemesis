@@ -7,15 +7,16 @@ public class DocPosition {
 
 	private String filePath;
 	private List<Long> positions;
+	private List<String> originWords;
 
 	public DocPosition(final String filePath) {
 		this.filePath = filePath;
 		positions = new ArrayList<Long>();
+		originWords = new ArrayList<String>();
 	}
 
 	public DocPosition(final String filePath, final Long position) {
-		this.filePath = filePath;
-		positions = new ArrayList<Long>();
+		this(filePath);
 		positions.add(position);
 	}
 
@@ -34,12 +35,20 @@ public class DocPosition {
 	public void setPositions(List<Long> positions) {
 		this.positions = positions;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return filePath + positions;
 	}
-	
-	public Integer getSize(){
+
+	public Integer getSize() {
 		return positions.size();
+	}
+
+	public List<String> getOriginWords() {
+		return originWords;
+	}
+
+	public void setOriginWords(List<String> originWords) {
+		this.originWords = originWords;
 	}
 }

@@ -22,6 +22,9 @@ public class SearchEngine {
 	private boolean DefText;
 
 	private SearchEngine(final boolean test) {
+		
+		long timestart = System.currentTimeMillis();
+		
 		stopWord = new StopWord();
 		stopWord.start();
 		docParser = new DocParser();
@@ -30,10 +33,17 @@ public class SearchEngine {
 		final List<Text> textsBruts = docParser.getDefaultTexts(DefText);
 		corpus = new Corpus(stopWord);
 		corpus.start(textsBruts);
+
+		long timeend = System.currentTimeMillis();
+		
+		long elapsedTime = timeend - timestart;
+		
+		System.out.println("Indexation réalisée en " + elapsedTime + " ms");
+		
 	}
 
 	private SearchEngine() {
-		this(true);
+		this(false);
 	}
 
 	public Solution executeQuery(final String query) {
@@ -60,8 +70,6 @@ public class SearchEngine {
 			Solution second = filePathsList.get(i);
 			filePathsList.remove(i + 1);
 			filePathsList.remove(i);
-
-			// TODO retirer les occurences des "not"
 			
 			if (operators.get(i).equals("and")) {
 				filePathsList.add(first.retainAll(second));

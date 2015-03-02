@@ -55,7 +55,7 @@ public class StopWord {
 	
 	public String deleteSpecialChar(final String text){
 		String tempText = new String(text);
-		tempText = tempText.replaceAll("[^a-zA-Z0-9 ]", "");
+		tempText = tempText.replaceAll("[^a-zA-Z0-9\\* ]", "");
 		return tempText;
 	}
 
