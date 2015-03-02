@@ -22,6 +22,7 @@ public class SearchPanel extends JPanel {
 		searchField.setColumns(75);
 		submitButton = new JButton("Rechercher");
 		searchButtonListener = new SearchButtonListener();
+		searchField.addActionListener(searchButtonListener);
 		submitButton.addActionListener(searchButtonListener);
 		this.add(searchField);
 		this.add(submitButton);
