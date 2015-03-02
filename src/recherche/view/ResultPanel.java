@@ -42,6 +42,11 @@ public class ResultPanel extends JPanel {
 		final JLabel noResult = new JLabel("Il n'existe aucun résultat pour votre recherche");
 		addComponent(noResult);
 	}
+	
+	public void emptyQuery(){
+		final JLabel emptyQuery = new JLabel("Veuillez entrer au moins un mot dans votre recherche");
+		addComponent(emptyQuery);
+	}
 
 	public void addTextResult(final Text text) {
 		final JTextArea result = new JTextArea(text.getText());
