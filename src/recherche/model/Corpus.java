@@ -2,11 +2,10 @@ package recherche.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 public class Corpus {
 
@@ -67,6 +66,24 @@ public class Corpus {
 			cptMot = 0L;
 		}
 	}
+	
+	private boolean regex_corpusContains(String pattern)
+	{
+		boolean ret = false;
+		
+		String p = pattern.replaceAll("\\*", "(.)*");
+		Pattern patt = Pattern.compile(p);
+		
+		for (String key : corpus.keySet()) {
+			
+			if(patt.matcher(key).matches())
+				System.out.println(key);
+//				return true;
+			
+		}
+		
+		return ret;
+	}
 
 	public Solution executeQuery(final String query) {
 
@@ -80,21 +97,38 @@ public class Corpus {
 			return new Solution();
 
 		String elt1 = (String) elements.nextElement();
-		if (corpus.containsKey(elt1)) {
-			for (DocPosition dp : corpus.get(elt1)) {
-				filepaths.add(dp.getFilePath(), dp.getPositions().size());
+		if(!elt1.contains("*"))
+		{
+			if (corpus.containsKey(elt1)) {
+				for (DocPosition dp : corpus.get(elt1)) {
+					filepaths.add(dp.getFilePath(), dp.getPositions().size());
+				}
 			}
+		}
+		else
+		{
+			boolean b = regex_corpusContains(elt1);
 		}
 
 		while (elements.hasMoreElements()) {
 			String elt = (String) elements.nextElement();
 			Solution tmp = new Solution();
-			if (corpus.containsKey(elt)) {
-				for (DocPosition dp : corpus.get(elt)) {
-					tmp.add(dp.getFilePath(), dp.getPositions().size());
+			
+			if(!elt.contains("*"))
+			{
+				if (corpus.containsKey(elt)) {
+					for (DocPosition dp : corpus.get(elt)) {
+						tmp.add(dp.getFilePath(), dp.getPositions().size());
+					}
 				}
 			}
+			else
+			{
+				
+			}
+			
 			filepaths = filepaths.retainAll(tmp);
+				
 		}
 
 		return filepaths;

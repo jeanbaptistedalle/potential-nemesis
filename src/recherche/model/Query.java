@@ -12,8 +12,53 @@ public class Query {
 		subQueries = new ArrayList<String>();
 		operators = new ArrayList<String>();
 	}
+	
+	private String trimOperators(String q)
+	{
+		StringTokenizer tokenizer = new StringTokenizer(q);
+		
+		String query = "";
+		
+		while(tokenizer.hasMoreTokens())
+		{
+			String token = tokenizer.nextToken();
+			if(!(token.equals("and") || token.equals("or") || token.equals("not")))
+			{
+				query = token;
+				break;
+			}
+		}
+		
+		while(tokenizer.hasMoreTokens())
+		{
+			query = tokenizer.nextToken() + " " + query;
+		}
+
+		StringTokenizer tokenizer2 = new StringTokenizer(query);
+		
+		String finalQuery = "";
+		
+		while(tokenizer2.hasMoreTokens())
+		{
+			String token = tokenizer2.nextToken();
+			if(!(token.equals("and") || token.equals("or") || token.equals("not")))
+			{
+				finalQuery = token;
+				break;
+			}
+		}
+		
+		while(tokenizer2.hasMoreTokens())
+		{
+			finalQuery = tokenizer2.nextToken() + " " + finalQuery;
+		}
+		
+		return finalQuery;
+		
+	}
 
 	public void fromString(String query) {
+		query = trimOperators(query);
 		StringTokenizer tokenizer = new StringTokenizer(query);
 		String tmp = "";
 		while (tokenizer.hasMoreElements()) {
@@ -21,9 +66,14 @@ public class Query {
 			if (token.toLowerCase().equals("and")
 					|| token.toLowerCase().equals("or")
 					|| token.toLowerCase().equals("not")) {
-				operators.add(token.toLowerCase());
-				subQueries.add(tmp);
-				tmp = "";
+				
+				if(!tmp.equals(""))
+				{
+					operators.add(token.toLowerCase());
+					subQueries.add(tmp);
+					tmp = "";
+				}
+				
 			}
 			else
 			{

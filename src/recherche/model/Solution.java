@@ -2,6 +2,7 @@ package recherche.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Solution {
 	
@@ -13,6 +14,18 @@ public class Solution {
 
 	public Map<String, Integer> getSolutions() {
 		return solutions;
+	}
+	
+	public Map<String, Integer> getSortedSolutions()
+	{
+		ValueComparator vc = new ValueComparator(solutions);
+		
+		Map<String, Integer> sol = new TreeMap<String, Integer>(vc);
+		
+		sol.putAll(solutions);
+		
+		return sol;
+		
 	}
 
 	public void setSolutions(Map<String, Integer> solutions) {
