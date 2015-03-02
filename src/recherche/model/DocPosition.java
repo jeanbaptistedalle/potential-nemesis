@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DocPosition {
-
+	
 	private String filePath;
-	private List<Long> positions;
+	private List<Integer> positions;
 	private List<String> originWords;
 
 	public DocPosition(final String filePath) {
 		this.filePath = filePath;
-		positions = new ArrayList<Long>();
+		positions = new ArrayList<Integer>();
 		originWords = new ArrayList<String>();
 	}
 
-	public DocPosition(final String filePath, final Long position) {
+	public DocPosition(final String filePath, final Integer position) {
 		this(filePath);
 		positions.add(position);
 	}
@@ -28,11 +28,11 @@ public class DocPosition {
 		this.filePath = filePath;
 	}
 
-	public List<Long> getPositions() {
+	public List<Integer> getPositions() {
 		return positions;
 	}
 
-	public void setPositions(List<Long> positions) {
+	public void setPositions(List<Integer> positions) {
 		this.positions = positions;
 	}
 

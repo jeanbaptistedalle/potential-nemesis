@@ -26,8 +26,6 @@ public class SearchButtonListener implements ActionListener {
 			final SearchEngine searchEngine = SearchEngine.getInstance();
 			final List<Text> listText = searchEngine.getFilesFromFilePaths(new ArrayList<String>(
 					listFilePath.getSortedSolutions().keySet()));
-			// final List<Text> listText =
-			// searchEngine.getDocParser().getDefaultTexts(SearchEngine.getInstance().isDefText());
 			mainPanel.getResultPanel().clearResult();
 			if (listText == null || listText.size() == 0) {
 				mainPanel.getResultPanel().noResult();
