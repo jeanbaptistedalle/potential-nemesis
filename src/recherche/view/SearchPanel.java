@@ -25,7 +25,7 @@ public class SearchPanel extends JPanel {
 	public SearchPanel() {
 		searchField = new JTextField();
 		try {
-			SpellChecker.registerDictionaries(new File("dictionary_en_2015_03.zip").toURI().toURL(), "en");
+			SpellChecker.registerDictionaries(new File("dictionary_en_2015_03/dictionary_en.ortho").toURI().toURL(), "en");
 			SpellChecker.register(searchField);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
