@@ -2,9 +2,8 @@ package recherche.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class SearchEngine {
 
@@ -43,7 +42,7 @@ public class SearchEngine {
 	}
 
 	private SearchEngine() {
-		this(true);
+		this(false);
 	}
 
 	public Solution executeQuery(final String query) {
@@ -87,8 +86,8 @@ public class SearchEngine {
 		return ret;
 	}
 
-	public List<Text> getFilesFromFilePaths(final List<String> listFilePath) {
-		return docParser.getTexts(listFilePath);
+	public List<Text> getFilesFromFilePaths(final Map<String, List<Integer>> map){
+		return docParser.getTexts(map);
 	}
 
 	public String toString() {

@@ -2,8 +2,9 @@ package recherche.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import recherche.model.SearchEngine;
 import recherche.model.Solution;
@@ -24,8 +25,9 @@ public class SearchButtonListener implements ActionListener {
 		} else {
 			final Solution listFilePath = SearchEngine.getInstance().executeQuery(query);
 			final SearchEngine searchEngine = SearchEngine.getInstance();
-			final List<Text> listText = searchEngine.getFilesFromFilePaths(new ArrayList<String>(
-					listFilePath.getSortedSolutions().keySet()));
+			final Map<String, List<Integer>> sortedSolution = new HashMap<String, List<Integer>>(
+					listFilePath.getSortedSolutions());
+			final List<Text> listText = searchEngine.getFilesFromFilePaths(sortedSolution);
 			mainPanel.getResultPanel().clearResult();
 			if (listText == null || listText.size() == 0) {
 				mainPanel.getResultPanel().noResult();
@@ -37,5 +39,10 @@ public class SearchButtonListener implements ActionListener {
 		}
 		mainPanel.getResultPanel().validate();
 		mainPanel.getResultPanel().repaint();
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				mainPanel.getScrollPane().getVerticalScrollBar().setValue(0);
+			}
+		});
 	}
 }

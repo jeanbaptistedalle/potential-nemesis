@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,7 +19,7 @@ public class DocParser {
 	private static final String TEXT_TAG_NAME = "TEXT";
 
 	public DocParser() {
-		
+
 	}
 
 	public List<Text> getDefaultTexts(final boolean test) {
@@ -28,32 +29,35 @@ public class DocParser {
 		} else {
 			dir = Arrays.asList(new File(AP_PATH).listFiles());
 		}
-		return prepareText(dir);
-	}
-	
-	public List<Text> getTexts(final List<String> filePathList){
-		final List<File> fileList = new ArrayList<File>();
-		for(final String filePath : filePathList){
-			final File f = new File(filePath);
-			fileList.add(f);
+		final List<Text> texts = new ArrayList<Text>();
+		for (final File file : dir) {
+			texts.add(prepareText(file, new ArrayList<Integer>()));
 		}
-		return prepareText(fileList);
+		return texts;
 	}
 
-	private List<Text> prepareText(final List<File> fileList) {
-		try {
-			final List<Text> texts = new ArrayList<Text>();
+	public List<Text> getTexts(final Map<String, List<Integer>> map) {
+		final List<Text> list = new ArrayList<Text>();
+		for (final String filePath : map.keySet()) {
+			final File f = new File(filePath);
+			final List<Integer> positions = map.get(filePath);
+			final Text text = prepareText(f, positions);
+			list.add(text);
+		}
+		return list;
+	}
 
-			for (final File f : fileList) {
-				final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				final Document d = dBuilder.parse(f);
-				final NodeList nl = d.getElementsByTagName(TEXT_TAG_NAME);
-				texts.add(new Text(f.getAbsolutePath(), nl.item(0).getTextContent()));
-			}
-			return texts;
+	private Text prepareText(final File file, final List<Integer> positions) {
+		try {
+			final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			final Document d = dBuilder.parse(file);
+			final NodeList nl = d.getElementsByTagName(TEXT_TAG_NAME);
+			final Text text = new Text(file.getAbsolutePath(), nl.item(0).getTextContent(),
+					positions);
+			return text;
 		} catch (final Exception e) {
-			throw new RuntimeException(e);
+			return null;
 		}
 	}
 }

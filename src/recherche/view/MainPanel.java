@@ -21,7 +21,7 @@ public class MainPanel extends JPanel {
 		searchPanel = new SearchPanel();
 		resultPanel = new ResultPanel();
 		scrollPane = new JScrollPane();
-		
+
 		scrollPane.setViewportView(resultPanel);
 		this.setPreferredSize(new Dimension(1000, 500));
 		this.setLayout(new BorderLayout());
@@ -43,5 +43,13 @@ public class MainPanel extends JPanel {
 
 	public void setResultPanel(ResultPanel resultPanel) {
 		this.resultPanel = resultPanel;
+	}
+
+	public JScrollPane getScrollPane() {
+		return scrollPane;
+	}
+
+	public void setScrollPane(JScrollPane scrollPane) {
+		this.scrollPane = scrollPane;
 	}
 }
