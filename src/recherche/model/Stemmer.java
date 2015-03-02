@@ -66,7 +66,7 @@ public class Stemmer {
 		while (stringTokenizer.hasMoreElements()) {
 			reset();
 			final String token = stringTokenizer.nextToken();
-			if (!token.isEmpty()) {
+			if (!token.isEmpty() && !token.contains("*") && !token.contains(".")) {
 				for (int i = 0; i < token.length(); i++) {
 					add(token.charAt(i));
 				}
@@ -77,6 +77,14 @@ public class Stemmer {
 					stringBuilder.append(" ");
 				}
 				stringBuilder.append(this.toString());
+			} else {
+				if (first) {
+					first = false;
+				} else {
+					stringBuilder.append(" ");
+				}
+				stringBuilder.append(token);
+
 			}
 		}
 		return stringBuilder.toString();

@@ -26,34 +26,44 @@ public class Corpus {
 		this.corpus = new HashMap<String, List<DocPosition>>();
 		Long cptMot = 0L;
 		for (final Text text : listTexts) {
-			final StringTokenizer stopTokenizer = new StringTokenizer(text.getText());
+			final StringTokenizer stopTokenizer = new StringTokenizer(
+					text.getText());
 			while (stopTokenizer.hasMoreTokens()) {
 				final String token = stopTokenizer.nextToken();
-				final String tokenSansPonctuation = stopWord.deleteSpecialChar(token);
-				if (tokenSansPonctuation != null && !tokenSansPonctuation.isEmpty()) {
-					final String stemmedToken = stemmer.stemWord(tokenSansPonctuation);
+				final String tokenSansPonctuation = stopWord
+						.deleteSpecialChar(token);
+				if (tokenSansPonctuation != null
+						&& !tokenSansPonctuation.isEmpty()) {
+					final String stemmedToken = stemmer
+							.stemWord(tokenSansPonctuation);
 					if (!stopWord.contains(stemmedToken)) {
 						if (corpus.containsKey(stemmedToken)) {
-							final List<DocPosition> list = corpus.get(stemmedToken);
+							final List<DocPosition> list = corpus
+									.get(stemmedToken);
 							boolean find = false;
 							for (final DocPosition doc : list) {
-								if (doc.getFilePath().equals(text.getTextPath())) {
+								if (doc.getFilePath()
+										.equals(text.getTextPath())) {
 									find = true;
 									doc.getPositions().add(cptMot);
-									if (!doc.getOriginWords().contains(tokenSansPonctuation)) {
-										doc.getOriginWords().add(tokenSansPonctuation);
+									if (!doc.getOriginWords().contains(
+											tokenSansPonctuation)) {
+										doc.getOriginWords().add(
+												tokenSansPonctuation);
 									}
 									break;
 								}
 							}
 							if (!find) {
-								list.add(new DocPosition(text.getTextPath(), cptMot));
+								list.add(new DocPosition(text.getTextPath(),
+										cptMot));
 							}
 						} else {
 							final List<DocPosition> listDoc = new ArrayList<DocPosition>();
-							final DocPosition docPosition = new DocPosition(text.getTextPath(),
-									cptMot);
-							docPosition.getOriginWords().add(tokenSansPonctuation);
+							final DocPosition docPosition = new DocPosition(
+									text.getTextPath(), cptMot);
+							docPosition.getOriginWords().add(
+									tokenSansPonctuation);
 							listDoc.add(docPosition);
 							corpus.put(stemmedToken, listDoc);
 						}
@@ -65,18 +75,23 @@ public class Corpus {
 		}
 	}
 
-	private boolean regex_corpusContains(String pattern) {
-		boolean ret = false;
+	private List<String> regex_corpusContains(String pattern) {
 
-		String p = pattern.replaceAll("\\*", "(.)*");
+		List<String> ret = new ArrayList<String>();
+
+		String p = pattern.replaceAll("\\.", ".?");
+		p = p.replaceAll("\\*", "(.)*");
 		Pattern patt = Pattern.compile(p);
+
+		System.out.println(p);
 
 		for (final String key : corpus.keySet()) {
 			for (final DocPosition docPosition : corpus.get(key)) {
 				for (final String originWord : docPosition.getOriginWords()) {
-					if (patt.matcher(originWord).matches())
-						System.out.println(key);
-					// return true;
+					if (patt.matcher(originWord).matches()) {
+						System.out.println(originWord);
+						ret.add(key);
+					}
 				}
 			}
 
@@ -97,27 +112,44 @@ public class Corpus {
 			return new Solution();
 
 		String elt1 = (String) elements.nextElement();
-		if (!elt1.contains("*")) {
+		if (!elt1.contains("*") && !elt1.contains(".")) {
 			if (corpus.containsKey(elt1)) {
 				for (DocPosition dp : corpus.get(elt1)) {
 					filepaths.add(dp.getFilePath(), dp.getPositions().size());
 				}
 			}
 		} else {
-			boolean b = regex_corpusContains(elt1);
+			List<String> b = regex_corpusContains(elt1);
+			if (b.size() > 0) {
+				for (String elt : b) {
+					for (DocPosition dp : corpus.get(elt)) {
+						filepaths.add(dp.getFilePath(), dp.getPositions()
+								.size());
+					}
+				}
+			}
 		}
 
 		while (elements.hasMoreElements()) {
 			String elt = (String) elements.nextElement();
 			Solution tmp = new Solution();
 
-			if (!elt.contains("*")) {
+			if (!elt.contains("*") && !elt.contains(".")) {
 				if (corpus.containsKey(elt)) {
 					for (DocPosition dp : corpus.get(elt)) {
 						tmp.add(dp.getFilePath(), dp.getPositions().size());
 					}
 				}
 			} else {
+				List<String> b = regex_corpusContains(elt1);
+				if (b.size() > 0) {
+					for (String elt2 : b) {
+						for (DocPosition dp : corpus.get(elt2)) {
+							filepaths.add(dp.getFilePath(), dp.getPositions()
+									.size());
+						}
+					}
+				}
 
 			}
 

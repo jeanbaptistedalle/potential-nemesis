@@ -43,11 +43,11 @@ public class SearchEngine {
 	}
 
 	private SearchEngine() {
-		this(false);
+		this(true);
 	}
 
 	public Solution executeQuery(final String query) {
-		final String querySansPonctuation = stopWord.deleteSpecialChar(query);
+		final String querySansPonctuation = stopWord.deleteSpecialCharForQuery(query);
 		final String queryLowerCase = querySansPonctuation.toLowerCase();
 		final Query queryObject = new Query();
 		queryObject.fromString(queryLowerCase);
