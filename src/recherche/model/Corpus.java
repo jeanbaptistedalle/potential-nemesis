@@ -16,12 +16,14 @@ public class Corpus {
 	private Map<String, List<DocPosition>> corpus;
 
 	private StopWord stopWord;
+	private List<Text> listOfTexts;
 
 	public Corpus(final StopWord stopWord) {
 		this.stopWord = stopWord;
 	}
 
 	public void start(List<Text> listTexts) {
+		listOfTexts = listTexts;
 		final Stemmer stemmer = new Stemmer();
 		this.corpus = new HashMap<String, List<DocPosition>>();
 		Integer cptMot = 0;
@@ -66,11 +68,27 @@ public class Corpus {
 		
 		for(final String key : corpus.keySet()){
 			for(final DocPosition doc : corpus.get(key)){
-				final Double tf = (double)doc.getSize();
+				final Double tf = 1 + Math.log((double)doc.getSize());
 				final Double idf= Math.log(listTexts.size()/(corpus.get(key).size()));
 				doc.setTfIdf(tf * idf);
 			}
 		}
+	}
+	
+	public Map<String, Double> getTfIdfFromQuery(List<String> query)
+	{
+		Map<String, Double> ret = new HashMap<String, Double>();
+		
+		for(String key: query){
+			
+			for(final DocPosition doc : corpus.get(key)){
+				final Double tf = 1 + Math.log((double) query.size());
+				final Double idf= Math.log(DocParser./(corpus.get(key).size()));
+				ret.put(key, tf * idf);
+			}
+		}
+		
+		return ret;
 	}
 
 	private List<String> regex_corpusContains(String pattern) {

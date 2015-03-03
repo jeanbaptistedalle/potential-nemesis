@@ -13,8 +13,11 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 public class SearchEngine {
 
@@ -91,11 +94,17 @@ public class SearchEngine {
 		queryObject.fromString(queryLowerCase);
 
 		final List<Solution> filePathsList = new ArrayList<Solution>();
-
+		final List<String> wordsOfQuery = new ArrayList<String>();
+		
 		for (final String elt : queryObject.getSubQueries()) {
 			final String queryFiltre = stopWord.filter(elt);
 			final String queryStem = stemmer.stemText(queryFiltre);
 			filePathsList.add(corpus.executeQuery(queryStem));
+			StringTokenizer stk = new StringTokenizer(queryStem);
+			while (stk.hasMoreTokens()) {
+				String s = (String) stk.nextElement();
+				wordsOfQuery.add(s);
+			}
 		}
 
 		ArrayList<String> operators = queryObject.getOperators();
@@ -119,9 +128,17 @@ public class SearchEngine {
 
 		}
 
+		Solution ret = new Solution();
+		ret.setWordsOfQuery(wordsOfQuery);
+		
 		if (filePathsList.size() == 0)
-			return new Solution();
-		Solution ret = filePathsList.get(0);
+		{
+			return ret;
+		}
+		
+		ret = filePathsList.get(0);
+		ret.setWordsOfQuery(wordsOfQuery);
+		
 		long timeEnd = System.currentTimeMillis();
 		long elapsedTime = timeEnd - timeStart;
 		System.out.println("Requete réalisée en " + elapsedTime + " ms");
