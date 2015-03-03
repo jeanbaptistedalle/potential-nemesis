@@ -33,17 +33,17 @@ public class ResultPanel extends JPanel {
 		resultList = new ArrayList<Component>();
 		this.setLayout(new GridBagLayout());
 		this.setAutoscrolls(true);
-		JLabel jlabel = new JLabel("Veuillez effectuer une recherche");
+		JLabel jlabel = new JLabel("Please type your request.");
 		addComponent(jlabel);
 	}
 
 	public void noResult() {
-		final JLabel noResult = new JLabel("Il n'existe aucun résultat pour votre recherche");
+		final JLabel noResult = new JLabel("There is no result for your request.");
 		addComponent(noResult);
 	}
 
 	public void emptyQuery() {
-		final JLabel emptyQuery = new JLabel("Veuillez entrer au moins un mot dans votre recherche");
+		final JLabel emptyQuery = new JLabel("Please type at least one word in your request.");
 		addComponent(emptyQuery);
 	}
 
@@ -75,7 +75,7 @@ public class ResultPanel extends JPanel {
 		result.setEditable(false);
 		result.setPreferredSize(new Dimension(500, 300));
 
-		final JButton button = new JButton("Ouvrir");
+		final JButton button = new JButton("Open");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (Desktop.isDesktopSupported()) {
@@ -88,6 +88,9 @@ public class ResultPanel extends JPanel {
 			}
 		});
 
+		final JLabel resultInfo = new JLabel("Nombre d'occurence : " + text.getPositions().size());
+		resultInfo.setPreferredSize(new Dimension(200, 300));
+
 		GridBagConstraints buttonConstraints = new GridBagConstraints();
 		buttonConstraints.gridx = 0;
 		buttonConstraints.gridy = resultList.size();
@@ -97,8 +100,14 @@ public class ResultPanel extends JPanel {
 		GridBagConstraints resultConstraints = new GridBagConstraints();
 		resultConstraints.gridx = 1;
 		resultConstraints.gridy = resultList.size() - 1;
-		resultConstraints.insets = new Insets(10, 0, 0, 0);
+		resultConstraints.insets = new Insets(10, 10, 10, 10);
 		addComponent(result, resultConstraints);
+
+		GridBagConstraints resultInfoConstraints = new GridBagConstraints();
+		resultInfoConstraints.gridx = 2;
+		resultInfoConstraints.gridy = resultList.size() - 2;
+		resultInfoConstraints.insets = new Insets(10, 10, 10, 10);
+		addComponent(resultInfo, resultInfoConstraints);
 	}
 
 	public void addComponent(final Component component, final GridBagConstraints contraint) {
@@ -116,5 +125,14 @@ public class ResultPanel extends JPanel {
 			this.remove(component);
 		}
 		resultList.clear();
+	}
+
+	public void addInfo(long elapsedTime, int nb) {
+		final JLabel infoLabel = new JLabel("Request execute in "+elapsedTime+"ms. "+nb+"results found");
+		GridBagConstraints resultConstraints = new GridBagConstraints();
+		resultConstraints.gridx = 1;
+		resultConstraints.gridy = resultList.size() - 1;
+		resultConstraints.insets = new Insets(10, 10, 10, 10);
+		addComponent(infoLabel, resultConstraints);
 	}
 }

@@ -25,6 +25,7 @@ public class Corpus {
 		final Stemmer stemmer = new Stemmer();
 		this.corpus = new HashMap<String, List<DocPosition>>();
 		Integer cptMot = 0;
+		Integer cptText = 0;
 		for (final Text text : listTexts) {
 			final StringTokenizer stopTokenizer = new StringTokenizer(text.getText());
 			while (stopTokenizer.hasMoreTokens()) {
@@ -62,12 +63,17 @@ public class Corpus {
 				cptMot++;
 			}
 			cptMot = 0;
+			cptText++;
+			if (cptText % 100 == 0) {
+				System.out.println("Avancement de l'indexation : " + cptText + "/"
+						+ listTexts.size() + " textes indexés");
+			}
 		}
-		
-		for(final String key : corpus.keySet()){
-			for(final DocPosition doc : corpus.get(key)){
-				final Double tf = (double)doc.getSize();
-				final Double idf= Math.log(listTexts.size()/(corpus.get(key).size()));
+
+		for (final String key : corpus.keySet()) {
+			for (final DocPosition doc : corpus.get(key)) {
+				final Double tf = (double) doc.getSize();
+				final Double idf = Math.log(listTexts.size() / (corpus.get(key).size()));
 				doc.setTfIdf(tf * idf);
 			}
 		}

@@ -57,7 +57,6 @@ public class SearchEngine {
 				long timeEnd = System.currentTimeMillis();
 				long elapsedTime = timeEnd - timeStart;
 				System.out.println("Indexation récupéré en " + elapsedTime + " ms");
-
 			} else {
 				index();
 				long timeEnd = System.currentTimeMillis();
@@ -84,7 +83,6 @@ public class SearchEngine {
 	}
 
 	public Solution executeQuery(final String query) {
-		long timeStart = System.currentTimeMillis();
 		final String querySansPonctuation = stopWord.deleteSpecialCharForQuery(query);
 		final String queryLowerCase = querySansPonctuation.toLowerCase();
 		final Query queryObject = new Query();
@@ -122,9 +120,6 @@ public class SearchEngine {
 		if (filePathsList.size() == 0)
 			return new Solution();
 		Solution ret = filePathsList.get(0);
-		long timeEnd = System.currentTimeMillis();
-		long elapsedTime = timeEnd - timeStart;
-		System.out.println("Requete réalisée en " + elapsedTime + " ms");
 		return ret;
 	}
 
