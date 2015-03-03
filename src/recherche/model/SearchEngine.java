@@ -1,5 +1,16 @@
 package recherche.model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,31 +32,59 @@ public class SearchEngine {
 	private boolean DefText;
 
 	private SearchEngine(final boolean test) {
-		
-		long timestart = System.currentTimeMillis();
-		
 		stopWord = new StopWord();
 		stopWord.start();
 		docParser = new DocParser();
 		stemmer = new Stemmer();
 		DefText = test;
-		final List<Text> textsBruts = docParser.getDefaultTexts(DefText);
 		corpus = new Corpus(stopWord);
-		corpus.start(textsBruts);
-
-		long timeend = System.currentTimeMillis();
-		
-		long elapsedTime = timeend - timestart;
-		
-		System.out.println("Indexation réalisée en " + elapsedTime + " ms");
-		
+		getIndex();
 	}
 
 	private SearchEngine() {
 		this(false);
 	}
 
+	public void getIndex() {
+		long timeStart = System.currentTimeMillis();
+		try {
+			if (new File("corpus.ser").exists()) {
+				InputStream file = new FileInputStream("corpus.ser");
+				InputStream buffer = new BufferedInputStream(file);
+				ObjectInput input = new ObjectInputStream(buffer);
+				corpus.setCorpus((Map<String, List<DocPosition>>) input.readObject());
+				input.close();
+				long timeEnd = System.currentTimeMillis();
+				long elapsedTime = timeEnd - timeStart;
+				System.out.println("Indexation récupéré en " + elapsedTime + " ms");
+
+			} else {
+				index();
+				long timeEnd = System.currentTimeMillis();
+				long elapsedTime = timeEnd - timeStart;
+				System.out.println("Indexation récupéré en " + elapsedTime + " ms");
+			}
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void index() {
+		final List<Text> textsBruts = docParser.getDefaultTexts(DefText);
+		corpus.start(textsBruts);
+		try {
+			OutputStream file = new FileOutputStream("corpus.ser");
+			OutputStream buffer = new BufferedOutputStream(file);
+			ObjectOutput output = new ObjectOutputStream(buffer);
+			output.writeObject(corpus.getCorpus());
+			output.close();
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Solution executeQuery(final String query) {
+		long timeStart = System.currentTimeMillis();
 		final String querySansPonctuation = stopWord.deleteSpecialCharForQuery(query);
 		final String queryLowerCase = querySansPonctuation.toLowerCase();
 		final Query queryObject = new Query();
@@ -69,7 +108,7 @@ public class SearchEngine {
 			Solution second = filePathsList.get(i);
 			filePathsList.remove(i + 1);
 			filePathsList.remove(i);
-			
+
 			if (operators.get(i).equals("and")) {
 				filePathsList.add(first.retainAll(second));
 			} else if (operators.get(i).equals("or")) {
@@ -83,10 +122,13 @@ public class SearchEngine {
 		if (filePathsList.size() == 0)
 			return new Solution();
 		Solution ret = filePathsList.get(0);
+		long timeEnd = System.currentTimeMillis();
+		long elapsedTime = timeEnd - timeStart;
+		System.out.println("Requete réalisée en " + elapsedTime + " ms");
 		return ret;
 	}
 
-	public List<Text> getFilesFromFilePaths(final Map<String, List<Integer>> map){
+	public List<Text> getFilesFromFilePaths(final Map<String, List<Integer>> map) {
 		return docParser.getTexts(map);
 	}
 

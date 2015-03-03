@@ -1,13 +1,20 @@
 package recherche.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocPosition {
-	
+public class DocPosition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4881241492296984088L;
 	private String filePath;
 	private List<Integer> positions;
 	private List<String> originWords;
+
+	private Double tfIdf;
 
 	public DocPosition(final String filePath) {
 		this.filePath = filePath;
@@ -36,10 +43,6 @@ public class DocPosition {
 		this.positions = positions;
 	}
 
-	public String toString() {
-		return filePath + positions;
-	}
-
 	public Integer getSize() {
 		return positions.size();
 	}
@@ -50,5 +53,19 @@ public class DocPosition {
 
 	public void setOriginWords(List<String> originWords) {
 		this.originWords = originWords;
+	}
+
+	public Double getTfIdf() {
+		return tfIdf;
+	}
+
+	public void setTfIdf(Double tfIdf) {
+		this.tfIdf = tfIdf;
+	}
+
+	@Override
+	public String toString() {
+		return "DocPosition [filePath=" + filePath + ", positions=" + positions + ", originWords="
+				+ originWords + ", tfIdf=" + tfIdf + "]";
 	}
 }

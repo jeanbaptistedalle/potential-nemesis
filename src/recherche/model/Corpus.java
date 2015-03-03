@@ -63,6 +63,14 @@ public class Corpus {
 			}
 			cptMot = 0;
 		}
+		
+		for(final String key : corpus.keySet()){
+			for(final DocPosition doc : corpus.get(key)){
+				final Double tf = (double)doc.getSize();
+				final Double idf= Math.log(listTexts.size()/(corpus.get(key).size()));
+				doc.setTfIdf(tf * idf);
+			}
+		}
 	}
 
 	private List<String> regex_corpusContains(String pattern) {

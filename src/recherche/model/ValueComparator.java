@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-class ValueComparator implements Comparator<String> {
+public class ValueComparator implements Comparator<String> {
  
     Map<String, List<Integer>> map;
  
@@ -17,6 +17,6 @@ class ValueComparator implements Comparator<String> {
             return -1;
         } else {
             return 1;
-        } // returning 0 would merge keys 
+        } // returning 0 would merge keys
     }
 }
