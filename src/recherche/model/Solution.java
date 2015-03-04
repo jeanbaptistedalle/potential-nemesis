@@ -39,6 +39,8 @@ public class Solution {
 		Map<String, List<Integer>> sol = new TreeMap<String, List<Integer>>(vc);
 
 		sol.putAll(solutions);
+		
+		System.out.println(sol);
 
 		return sol;
 

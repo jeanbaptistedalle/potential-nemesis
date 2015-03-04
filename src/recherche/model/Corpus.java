@@ -2,6 +2,7 @@ package recherche.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -27,35 +28,46 @@ public class Corpus {
 		final Stemmer stemmer = new Stemmer();
 		this.corpus = new HashMap<String, List<DocPosition>>();
 		Integer cptMot = 0;
+		Integer cptText = 0;
 		for (final Text text : listTexts) {
-			final StringTokenizer stopTokenizer = new StringTokenizer(text.getText());
+			final StringTokenizer stopTokenizer = new StringTokenizer(
+					text.getText());
 			while (stopTokenizer.hasMoreTokens()) {
 				final String token = stopTokenizer.nextToken();
-				final String tokenSansPonctuation = stopWord.deleteSpecialChar(token);
-				if (tokenSansPonctuation != null && !tokenSansPonctuation.isEmpty()) {
-					final String stemmedToken = stemmer.stemWord(tokenSansPonctuation);
+				final String tokenSansPonctuation = stopWord
+						.deleteSpecialChar(token);
+				if (tokenSansPonctuation != null
+						&& !tokenSansPonctuation.isEmpty()) {
+					final String stemmedToken = stemmer
+							.stemWord(tokenSansPonctuation);
 					if (!stopWord.contains(stemmedToken)) {
 						if (corpus.containsKey(stemmedToken)) {
-							final List<DocPosition> list = corpus.get(stemmedToken);
+							final List<DocPosition> list = corpus
+									.get(stemmedToken);
 							boolean find = false;
 							for (final DocPosition doc : list) {
-								if (doc.getFilePath().equals(text.getTextPath())) {
+								if (doc.getFilePath()
+										.equals(text.getTextPath())) {
 									find = true;
 									doc.getPositions().add(cptMot);
-									if (!doc.getOriginWords().contains(tokenSansPonctuation)) {
-										doc.getOriginWords().add(tokenSansPonctuation);
+									if (!doc.getOriginWords().contains(
+											tokenSansPonctuation)) {
+										doc.getOriginWords().add(
+												tokenSansPonctuation);
 									}
 									break;
 								}
 							}
 							if (!find) {
-								list.add(new DocPosition(text.getTextPath(), cptMot));
+								list.add(new DocPosition(text.getTextPath(),
+										cptMot));
 							}
 						} else {
 							final List<DocPosition> listDoc = new ArrayList<DocPosition>();
-							final DocPosition docPosition = new DocPosition(text.getTextPath(),
-									cptMot);
-							docPosition.getOriginWords().add(tokenSansPonctuation);
+							final DocPosition docPosition = new DocPosition(
+									text.getTextPath(), cptMot);
+							docPosition.getOriginWords().add(
+									tokenSansPonctuation);
 							listDoc.add(docPosition);
 							corpus.put(stemmedToken, listDoc);
 						}
@@ -64,30 +76,58 @@ public class Corpus {
 				cptMot++;
 			}
 			cptMot = 0;
+			cptText++;
+			if (cptText % 100 == 0) {
+				System.out.println("Avancement de l'indexation : " + cptText
+						+ "/" + listTexts.size() + " textes indexés");
+			}
 		}
-		
-		for(final String key : corpus.keySet()){
-			for(final DocPosition doc : corpus.get(key)){
-				final Double tf = 1 + Math.log((double)doc.getSize());
-				final Double idf= Math.log(listTexts.size()/(corpus.get(key).size()));
+
+		for (final String key : corpus.keySet()) {
+			for (final DocPosition doc : corpus.get(key)) {
+				final Double tf = 1 + Math.log((double) doc.getSize());
+				final Double idf = Math.log(listTexts.size()
+						/ (corpus.get(key).size()));
 				doc.setTfIdf(tf * idf);
 			}
 		}
 	}
-	
-	public Map<String, Double> getTfIdfFromQuery(List<String> query)
-	{
+
+	public Map<String, Double> getTfIdfFromQuery(List<String> query) {
 		Map<String, Double> ret = new HashMap<String, Double>();
-		
-		for(String key: query){
-			
-			for(final DocPosition doc : corpus.get(key)){
+
+		for (String key : query) {
+
+			for (final DocPosition doc : corpus.get(key)) {
 				final Double tf = 1 + Math.log((double) query.size());
-				final Double idf= Math.log(DocParser./(corpus.get(key).size()));
+				final Double idf = Math.log(DocParser.getDirectoryText(
+						SearchEngine.getInstance().isDefText()).size()
+						/ (corpus.get(key).size()));
 				ret.put(key, tf * idf);
 			}
 		}
-		
+
+		return ret;
+	}
+
+	public Map<String, Double> getTfIdfFromQueryv2(List<String> query) {
+		Map<String, Double> ret = new HashMap<String, Double>();
+
+		for (final String key : corpus.keySet()) {
+			if (query.contains(key)) {
+
+				for (final DocPosition doc : corpus.get(key)) {
+					final Double tf = 1 + Math.log((double) query.size());
+					final Double idf = Math.log(DocParser.getDirectoryText(
+							SearchEngine.getInstance().isDefText()).size()
+							/ (corpus.get(key).size()));
+					ret.put(key, tf * idf);
+				}
+			}
+			else
+				ret.put(key, 0.d);
+		}
+
 		return ret;
 	}
 

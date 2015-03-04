@@ -21,14 +21,17 @@ public class DocParser {
 	public DocParser() {
 
 	}
+	
+	public static List<File> getDirectoryText(final boolean test){
+		if (test) {
+			return Arrays.asList(new File(TESTING_AP_PATH).listFiles());
+		} else {
+			return Arrays.asList(new File(AP_PATH).listFiles());
+		}
+	}
 
 	public List<Text> getDefaultTexts(final boolean test) {
-		final List<File> dir;
-		if (test) {
-			dir = Arrays.asList(new File(TESTING_AP_PATH).listFiles());
-		} else {
-			dir = Arrays.asList(new File(AP_PATH).listFiles());
-		}
+		final List<File> dir = getDirectoryText(test);
 		final List<Text> texts = new ArrayList<Text>();
 		for (final File file : dir) {
 			texts.add(prepareText(file, new ArrayList<Integer>()));
