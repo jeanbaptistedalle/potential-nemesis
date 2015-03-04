@@ -115,7 +115,7 @@ public class ValueComparator implements Comparator<String> {
 			cosinusB = out.getCosDoc().get(b);
 		}
 
-		System.out.println(a + " == " + cosinusA + b + " == " + cosinusB);
+		// System.out.println(a + " == " + cosinusA + b + " == " + cosinusB);
 
 		if (cosinusA <= cosinusB) {
 			return -1;
@@ -168,7 +168,7 @@ public class ValueComparator implements Comparator<String> {
 			cosinusA = part1 / (Math.sqrt(part2 * part3));
 			out.getCosDoc().put(a, cosinusA);
 		} else {
-			System.out.println("Get last A");
+//			System.out.println("Get last A");
 			cosinusA = out.getCosDoc().get(a);
 		}
 
@@ -205,11 +205,11 @@ public class ValueComparator implements Comparator<String> {
 			cosinusB = part1 / (Math.sqrt(part2 * part3));
 			out.getCosDoc().put(b, cosinusB);
 		} else {
-			System.out.println("Get last B");
+//			System.out.println("Get last B");
 			cosinusB = out.getCosDoc().get(b);
 		}
 
-		System.out.println("CosinusA=" + cosinusA + " CosinusB=" + cosinusB);
+//		System.out.println("CosinusA=" + cosinusA + " CosinusB=" + cosinusB);
 
 		if (cosinusA < cosinusB) {
 			return 1;
