@@ -3,9 +3,9 @@ package recherche.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.BritishEnglish;
@@ -25,7 +25,8 @@ public class SearchButtonListener implements ActionListener {
 	public void actionPerformed(final ActionEvent arg0) {
 		long timeStart = System.currentTimeMillis();
 		final MainPanel mainPanel = MainFrame.getInstance().getMainPanel();
-		final String query = mainPanel.getSearchPanel().getSearchField().getText();
+		final String query = mainPanel.getSearchPanel().getSearchField()
+				.getText();
 		if (query == null || query.isEmpty()) {
 			mainPanel.getResultPanel().emptyQuery();
 		} else {
@@ -36,24 +37,32 @@ public class SearchButtonListener implements ActionListener {
 				langTool = new JLanguageTool(new BritishEnglish());
 				langTool.activateDefaultPatternRules();
 				String squery = query.trim();
-				squery = Character.toUpperCase(squery.charAt(0)) + squery.substring(1);
+				squery = Character.toUpperCase(squery.charAt(0))
+						+ squery.substring(1);
 				List<RuleMatch> matches = langTool.check(squery);
 
 				for (RuleMatch match : matches) {
-					System.out.println("Potential error at column " + match.getColumn() + ": "
-							+ match.getMessage());
-					System.out.println("Suggested correction: " + match.getSuggestedReplacements().get(0));
+					System.out.println("Potential error at column "
+							+ match.getColumn() + ": " + match.getMessage());
+					System.out.println("Suggested correction: "
+							+ match.getSuggestedReplacements().get(0));
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			final Solution listFilePath = SearchEngine.getInstance().executeQuery(query);
+			final Solution listFilePath = SearchEngine.getInstance()
+					.executeQuery(query);
 			final SearchEngine searchEngine = SearchEngine.getInstance();
-			final Map<String, List<Integer>> sortedSolution = new TreeMap<String, List<Integer>>(
-					listFilePath.getSortedSolutions());
-			final List<Text> listText = searchEngine.getFilesFromFilePaths(sortedSolution);
+			final Map<String, List<Integer>> sortedSolution = listFilePath
+					.getSortedSolutions();
+
+			System.out.println("\n\n" + sortedSolution + "\n\n");
+
+			final List<Text> listText = searchEngine
+					.getFilesFromFilePaths(sortedSolution);
+			Collections.reverse( listText);
 			mainPanel.getResultPanel().clearResult();
 			long timeEnd = System.currentTimeMillis();
 			long elapsedTime = timeEnd - timeStart;
@@ -62,8 +71,10 @@ public class SearchButtonListener implements ActionListener {
 				mainPanel.getResultPanel().noResult();
 			} else {
 				for (final Text text : listText) {
-					mainPanel.getResultPanel().addTextResult(text, listFilePath.getCosDoc().get(text.getTextPath()));
-					System.out.println(text.getTextPath() + " = " + listFilePath.getCosDoc().get(text.getTextPath()));
+					mainPanel.getResultPanel().addTextResult(text,
+							listFilePath.getCosDoc().get(text.getTextPath()));
+					System.out.println(text.getTextPath() + " = "
+							+ listFilePath.getCosDoc().get(text.getTextPath()));
 				}
 			}
 		}

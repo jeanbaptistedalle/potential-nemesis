@@ -211,10 +211,10 @@ public class ValueComparator implements Comparator<String> {
 
 		System.out.println("CosinusA=" + cosinusA + " CosinusB=" + cosinusB);
 
-		if (cosinusA >= cosinusB) {
-			return -1;
-		} else {
+		if (cosinusA < cosinusB) {
 			return 1;
+		} else {
+			return -1;
 		} // returning 0 would merge keys
 	}
 }

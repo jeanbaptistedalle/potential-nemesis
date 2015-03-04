@@ -38,18 +38,21 @@ public class ResultPanel extends JPanel {
 	}
 
 	public void noResult() {
-		final JLabel noResult = new JLabel("There is no result for your request.");
+		final JLabel noResult = new JLabel(
+				"There is no result for your request.");
 		addComponent(noResult);
 	}
 
 	public void emptyQuery() {
-		final JLabel emptyQuery = new JLabel("Please type at least one word in your request.");
+		final JLabel emptyQuery = new JLabel(
+				"Please type at least one word in your request.");
 		addComponent(emptyQuery);
 	}
 
 	public void addTextResult(final Text text, Double Score) {
 		final StringBuilder stringBuilder = new StringBuilder();
-		final StringTokenizer stringTokenizer = new StringTokenizer(text.getText());
+		final StringTokenizer stringTokenizer = new StringTokenizer(
+				text.getText());
 		int cpt = 0;
 		boolean first = true;
 		while (stringTokenizer.hasMoreElements()) {
@@ -59,8 +62,9 @@ public class ResultPanel extends JPanel {
 				stringBuilder.append(" ");
 			}
 			final String s = stringTokenizer.nextToken();
-			if (text.getPositions() != null && text.getPositions().contains(cpt)) {
-				stringBuilder.append("<strong>");
+			if (text.getPositions() != null
+					&& text.getPositions().contains(cpt)) {
+				stringBuilder.append("<strong style=\"background:yellow;\">");
 				stringBuilder.append(s);
 				stringBuilder.append("</strong>");
 			} else {
@@ -69,7 +73,8 @@ public class ResultPanel extends JPanel {
 			cpt++;
 		}
 
-		final JEditorPane result = new JEditorPane("text/html", stringBuilder.toString());
+		final JEditorPane result = new JEditorPane("text/html",
+				stringBuilder.toString());
 		result.setContentType("text/html");
 		result.setText(stringBuilder.toString());
 		result.setEditable(false);
@@ -80,7 +85,8 @@ public class ResultPanel extends JPanel {
 			public void actionPerformed(final ActionEvent e) {
 				if (Desktop.isDesktopSupported()) {
 					try {
-						Desktop.getDesktop().browse(new URI("file://" + text.getTextPath()));
+						Desktop.getDesktop().browse(
+								new URI("file://" + text.getTextPath()));
 					} catch (final Exception ex) {
 						throw new RuntimeException(ex);
 					}
@@ -88,7 +94,16 @@ public class ResultPanel extends JPanel {
 			}
 		});
 
-		final JLabel resultInfo = new JLabel("Score : " + Score);
+		StringBuilder label = new StringBuilder();
+		label.append("<html>File : "
+				+ text.getTextPath().substring(
+						text.getTextPath().lastIndexOf('/') + 1));
+
+		label.append("<br/>");
+		label.append("Score : " + Score);
+		label.append("</html>");
+
+		final JLabel resultInfo = new JLabel(label.toString());
 		resultInfo.setPreferredSize(new Dimension(200, 300));
 
 		GridBagConstraints buttonConstraints = new GridBagConstraints();
@@ -107,10 +122,12 @@ public class ResultPanel extends JPanel {
 		resultInfoConstraints.gridx = 2;
 		resultInfoConstraints.gridy = resultList.size() - 2;
 		resultInfoConstraints.insets = new Insets(10, 10, 10, 10);
+
 		addComponent(resultInfo, resultInfoConstraints);
 	}
 
-	public void addComponent(final Component component, final GridBagConstraints contraint) {
+	public void addComponent(final Component component,
+			final GridBagConstraints contraint) {
 		this.add(component, contraint);
 		resultList.add(component);
 	}
@@ -128,7 +145,8 @@ public class ResultPanel extends JPanel {
 	}
 
 	public void addInfo(long elapsedTime, int nb) {
-		final JLabel infoLabel = new JLabel("Request execute in "+elapsedTime+"ms. "+nb+" results found");
+		final JLabel infoLabel = new JLabel("Request execute in " + elapsedTime
+				+ "ms. " + nb + " results found");
 		GridBagConstraints resultConstraints = new GridBagConstraints();
 		resultConstraints.gridx = 1;
 		resultConstraints.gridy = resultList.size() - 1;
