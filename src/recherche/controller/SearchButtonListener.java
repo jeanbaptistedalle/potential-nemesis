@@ -62,7 +62,7 @@ public class SearchButtonListener implements ActionListener {
 
 			final List<Text> listText = searchEngine
 					.getFilesFromFilePaths(sortedSolution);
-			Collections.reverse( listText);
+//			Collections.reverse( listText);
 			mainPanel.getResultPanel().clearResult();
 			long timeEnd = System.currentTimeMillis();
 			long elapsedTime = timeEnd - timeStart;

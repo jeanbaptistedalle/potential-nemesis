@@ -78,7 +78,7 @@ public class ResultPanel extends JPanel {
 		result.setContentType("text/html");
 		result.setText(stringBuilder.toString());
 		result.setEditable(false);
-		result.setPreferredSize(new Dimension(500, 300));
+		result.setPreferredSize(new Dimension(500, 512));
 
 		final JButton button = new JButton("Open");
 		button.addActionListener(new ActionListener() {

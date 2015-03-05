@@ -1,0 +1,108 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[frenchb]{babel}
+
+%opening
+\title{Recherche documentaire}
+\author{Jean-Baptiste Dalle \& Romain Gaborieau}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\begin{abstract}
+
+La formation de Master Informatique de l'UFR Sciences de l'Universit\'e d'Angers dans laquelle nous sommes propose des options durant la prmi\`ere ann\'ee. L'une d'elle est un module de "Recherche Documentaire" dispens\'e par Mme AMGHAR. Durant cette option, nous avons d\'ecouvert le fonctionnement interne \`a un moteur de recherche, quelles sont les am\'eliorations qui y ont \'et\'e apport\'ees depuis plusieurs ann\'ees et afin de valider nos acquis, il nous a fallu r\'ealiser un moteur de recherche dans un corpus de textes. Nous allons vous pr\'esenter ici comment nous avons r\'efl\'echi au probl\`eme et quelles solutions nous proposons.
+
+\end{abstract}
+
+\section{Le corpus de textes}
+
+\subsection{Unification des documents}
+
+Le corpus qui a \'et\'e donn\'e est un ensemble de fichiers textes comportant chacun un ou plusieurs documents. Afin de faciliter l'acc\`es \`a l'utilisateur \`a chacun de ces documents, nous avons \'ecrit un script qui cr\'ee un fichier par document. Ainsi, les r\'esultats de la recherche peuvent amener directement \`a un fichier unique contenant un unique document.
+
+\subsection{Un format XML}
+
+Chaque document est donn\'e sous un format XML dont une grosse partie des balises correspondent \`a des m\'etadonn\'ees et la derni\`ere correspond au texte brut. Il a donc fallu parser le fichier pour en extraire les donn\'ees les plus importantes. Nous avons choisi de ne r\'ecup\'erer que la partie "texte brut" car notre recherche ne porte que sur ce texte. Ainsi, de part le peu de temps qui nous est accord\'e, nous n'avons \`a traiter que deux donn\'ees: le nom du fichier contenant le document et son texte. Si par la suite il avait fallu continuer le d\'eveloppement de ce projet, il aurait \'et\'e possible de prendre en compte le titre du document et ainsi r\'ealiser des recherches sp\'ecifiquement dans les titre, les texte ou les deux. 
+
+\section{L'indexation}
+
+\subsection{Sous quelle forme?}
+
+Il existe plusieurs formes d'index tels que la matrice de bool\'eens. Pour une performance accentu\'ee et un impl\'ementation rapide, nous avons s\'electionn\'e le format de listes de positions. Notre index comporte une entr\'ee pour chaque mot, et chacune de ces entr\'ees est une liste de positions dans les documents.
+
+Exemple:
+
+\begin{itemize}
+ \item ["caesar"] $\rightarrow$ D1 \{3, 56\} $\rightarrow$ D3 \{7\}
+ \item ["world"] $\rightarrow$ D6 \{1, 5, 6\} $\rightarrow$ D3 \{8\} $\rightarrow$ D8 \{4\}
+\end{itemize}
+
+\subsection{Les stopwords}
+
+La recherche dans le texte se fait sur des mots et uniquement des mots, il a donc fallu supprimer tous les caract\`eres de ponctuation autres que les espaces. Par la suite, nous avons supprim\'e ce que l'on appelle les stopwords. Ces derniers sont des mots tr\`es r\'ecurrent dans une langue qui peuvent fausser les r\'esultats. En effet si l'on recherche "the dog", "the" \'etant tr\`es courant dans la langue anglaise, il sera probablement tr\`es pr\'esent dans les document du corpus. Pourtant le mot important dans cette requ\^ete est "dog". Ainsi, supprimer les mots de ce style de l'index permet de r\'eduire sa taille et donc diminue le temps d'ex\'ecution. Une liste est pr\'esente dans un fichier texte \`a la racine du projet.
+
+\subsection{La racinisation}
+
+La racinisation ou stemming est une \'etape d'autant plus importante que la pr\'ec\'edente. Cette \'etape r\'eduit les mots rencontr\'es dans un texte \`a leurs racines. En effet, si l'on souhaite rechercher "dog" et qu'un document contient "dogs", ce dernier est pertinent m\^eme si ce n'est pas exactement le mot recherch\'e. Finalement, c'est le mot racine qui est index\'e 
+
+Pour notre projet, nous avons utilis\'e la classe fournie sur le site \texttt{tartarus.org} page de \textit{martin}.
+
+\section{Les requ\^etes}
+
+Les requ\^etes sont soumises aux m\^emes contraintes que les texte: on ignore la ponctuation, les stopwords et on racinise les mots. En effet, une requ\^ete est consid\'er\'e comme un texte \`a part enti\`ere: un document est pertinent face \`a une requ\^ete en fonction de sa proximit\'e avec celle-ci.
+
+\subsection{Le format des requ\^etes}
+
+Une requ\^ete est de la forme \texttt{mot1 \verb?[?\verb?[?op\'erateur\verb?]? mot2 \verb?[?\ldots\verb?]]?}. Par d\'efaut, si un op\'erateur n'est pas sp\'ecifi\'e, alors il est consid\'er\'e comme un "and". Les autres op\'erateur possibles sont "or" et "not". 
+
+\begin{description}
+ \item[and] sp\'ecifie que les deux mots plac\'es de chaque part doivent \^etre pr\'esents dans le m\^eme document.
+ \item[or] sp\'ecifie que l'un des deux mots plac\'es de chaque part doit \^etre pr\'esent dans le m\^eme document. Ils peuvent \^etre pr\'esent tous les deux (le ou n'est pas exclusif)
+ \item[not] sp\'ecifie que le mot plac\'e \`a sa droite ne doit pas \^etre pr\'esent dans le document.
+\end{description}
+
+Il est possible d'utiliser des jokers: "*" est un joker rempla\c{c}ant tout sous-chaîne possiblement vide, "." remplace quant \`a lui un possible caract\`ere.
+
+Exemple d'une requ\^ete compos\'ee de toutes ces possibilit\'es: \texttt{cat or cats dog. not dogm}. On recherche ici tout document contenant "cat" ou "cats" et contenant \'egalement tout mot de 3 ou 4 lettres commen\c{c}ant par "dog" mais ne contenant pas "dogm". On peut ici percevoir un subtilit\'e: si le document contient "dog" et "dogm", alors il ne sera pas consid\'er\'e comme pertinent, car il contient "dogm". En effet, il suffit d'une occurrence de "dogm" pour que le document soit \'ecart\'e. 
+
+\subsection{Les op\'erateurs}
+
+Comme abord\'e ci-dessus, il est possible d'ajouter des op\'erateurs \`a la requ\^ete. Dans ce cas l\`a, la requ\^ete est alors scind\'ee en plusieurs sous-requ\^etes. Chaque sous-requ\^ete est trait\'ee et renvoie un r\'esultat (un ensemble de documents). Afin d'obtenir le r\'esultat final, on r\'ealise des op\'erations ensemblistes:
+
+\begin{description}
+ \item[and] r\'ealise une intersection
+ \item[or] r\'ealise une union
+ \item[not] r\'ealise une diff\'erence
+\end{description}
+
+\subsection{Les jokers}
+
+Les jokers sont transform\'ees en expressions r\'eguli\`eres afin de comparer \`a toutes les entr\'ees de l'index. Cependant, cela nous a amen\'e \`a ignorer des documents pertinents. En effet, si l'on cherche une expression non racinis\'ee, alors l'expression r\'eguli\`ere ne correspondra pas. Pour palier \`a cela, nous enregistrons tous les mots rencontr\'es appartenant \`a une racine et nous explorons l'index sur ces mots. Si l'on rencontre "rolling", le stemmer enregistrera "roll" dans l'index, mais liera \'egalement "rolling" \`a "roll", ce qui permettra de faire correspondre "roll*g" \`a "roll". 
+
+\section{Calcul de la pertinence}
+
+Le calcul de la pertinence d'un document par rapport \`a une requ\^ete, nous calculons d'abord le TF-IDF de chaque mot apr\`es l'indexation.
+
+\subsection{Le TF-IDF}
+
+Le TF utilis\'e est le nombre d'occurrence d'un mot dans le document qui est normalis\'e par un logarithme d\'ecimal. Nous avions pens\'e \'egalement \`a normaliser en divisant par le nombre de mots dans le document.
+
+L'IDF quant \`a lui est calcul\'e en divisant le nombre de documents par le nombre d'occurrences d'un mot parmi tous les documents.
+
+\subsection{Calcul de la proximit\'e}
+
+La proximit\'e d'une requ\^ete est calcul\'e gr\^ace au cosinus de Salton. Cette m\'ethode consid\`ere chaque document (requ\^ete comprise) comme un vecteur dont chaque coordonn\'ee est le TF-IDF d'un mot de l'index. En r\'ealisant le cosinus entre le vecteur de la requ\^ete et celui du document, on obtient un score entre 0 et 1 (car nous supprimons les documents non pertinents, les valeurs n\'egatives ne sont pas prises en compte). Plus cette valeur est basse, plus le document est proche de la requ\^ete.
+
+\section{Les extensions}
+
+\subsection{La correction orthographique}
+
+
+
+
+\end{document}
