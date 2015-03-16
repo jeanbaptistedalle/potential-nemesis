@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt]{report}
 \usepackage[utf8]{inputenc}
 \usepackage[frenchb]{babel}
 
@@ -41,6 +41,7 @@ Exemple:
  \item ["caesar"] $\rightarrow$ D1 \{3, 56\} $\rightarrow$ D3 \{7\}
  \item ["world"] $\rightarrow$ D6 \{1, 5, 6\} $\rightarrow$ D3 \{8\} $\rightarrow$ D8 \{4\}
 \end{itemize}
+Ici, on a voit donc que le mot ``caesar'' est contenu dans le document 1 aux positions 3 et 56 puis dans le document 3 à la position 7. Par extension, le mot n'est donc présent dans aucun autre document.
 
 \subsection{Les stopwords}
 
@@ -51,6 +52,10 @@ La recherche dans le texte se fait sur des mots et uniquement des mots, il a don
 La racinisation ou stemming est une \'etape d'autant plus importante que la pr\'ec\'edente. Cette \'etape r\'eduit les mots rencontr\'es dans un texte \`a leurs racines. En effet, si l'on souhaite rechercher "dog" et qu'un document contient "dogs", ce dernier est pertinent m\^eme si ce n'est pas exactement le mot recherch\'e. Finalement, c'est le mot racine qui est index\'e 
 
 Pour notre projet, nous avons utilis\'e la classe fournie sur le site \texttt{tartarus.org} page de \textit{martin}.
+
+\subsection{Performances}
+
+L'execution de l'indexation est relativement longue, prenant environ 10s, cependant, elle n'est lancée qu'une seule fois au démarrage du projet, puis lorsque l'utilisateur le décide. Dans le cadre d'un véritable projet, l'indexation serait plutôt lancé à intervalles réguliers plutôt que par un utilisateur et même si c'était le cas, seul un administrateur aurait ce droit.
 
 \section{Les requ\^etes}
 
@@ -68,7 +73,7 @@ Une requ\^ete est de la forme \texttt{mot1 \verb?[?\verb?[?op\'erateur\verb?]? m
 
 Il est possible d'utiliser des jokers: "*" est un joker rempla\c{c}ant tout sous-chaîne possiblement vide, "." remplace quant \`a lui un possible caract\`ere.
 
-Exemple d'une requ\^ete compos\'ee de toutes ces possibilit\'es: \texttt{cat or cats dog. not dogm}. On recherche ici tout document contenant "cat" ou "cats" et contenant \'egalement tout mot de 3 ou 4 lettres commen\c{c}ant par "dog" mais ne contenant pas "dogm". On peut ici percevoir un subtilit\'e: si le document contient "dog" et "dogm", alors il ne sera pas consid\'er\'e comme pertinent, car il contient "dogm". En effet, il suffit d'une occurrence de "dogm" pour que le document soit \'ecart\'e. 
+Exemple d'une requ\^ete compos\'ee de toutes ces possibilit\'es: \texttt{cat or cats dog. not dogm}. On recherche ici tout document contenant "cat" ou "cats" et contenant \'egalement tout mot de 3 ou 4 lettres commen\c{c}ant par "dog" mais ne contenant pas "dogm". On peut ici percevoir un subtilit\'e: si le document contient "dog" et "dogm", alors il ne sera pas consid\'er\'e comme pertinent, car il contient "dogm". En effet, il suffit d'une occurrence de "dogm" pour que le document soit \'ecart\'e.  Une évolution possible pourrait être de simplement diminuer le score lorsque les mots définis par un not sont trouvés dans un texte.
 
 \subsection{Les op\'erateurs}
 
@@ -94,6 +99,10 @@ Le TF utilis\'e est le nombre d'occurrence d'un mot dans le document qui est nor
 
 L'IDF quant \`a lui est calcul\'e en divisant le nombre de documents par le nombre d'occurrences d'un mot parmi tous les documents.
 
+Pour des raisons de gains de performance, nous avons décidé de réaliser les calculs du TF-IDF lors de l'indexation plutôt que lorsqu'une requête est effectuée car, à long terme, le TF-IDF sera recalculé trop souvent.
+
+Cependant, la mise en place de ce calcul a soulevé plusieurs questions. Par exemple, dans le cas de la recherche précédente \texttt{cat or cats dog. not dogm}, serait-il préférable d'exclure completement les textes contenant dogm ou de simplement leur donné un mauvais score ? Nous avons simplement décidé d'excluse completement les documents contenant les termes exclus, mais il serait possible dans le cadre d'une amélioration de les inclure tout de même dans les requête ayant peu de retour.
+
 \subsection{Calcul de la proximit\'e}
 
 La proximit\'e d'une requ\^ete est calcul\'e gr\^ace au cosinus de Salton. Cette m\'ethode consid\`ere chaque document (requ\^ete comprise) comme un vecteur dont chaque coordonn\'ee est le TF-IDF d'un mot de l'index. En r\'ealisant le cosinus entre le vecteur de la requ\^ete et celui du document, on obtient un score entre 0 et 1 (car nous supprimons les documents non pertinents, les valeurs n\'egatives ne sont pas prises en compte). Plus cette valeur est basse, plus le document est proche de la requ\^ete.
@@ -102,7 +111,10 @@ La proximit\'e d'une requ\^ete est calcul\'e gr\^ace au cosinus de Salton. Cette
 
 \subsection{La correction orthographique}
 
-Nous utilisons le correcteur orthographique language-tool, utilis\'e par libreOffice, qui affiche dans le terminal les possibilit\'es de correction d'un mot mal orthographi\'e. Nous avons d\'ecid\'e de ne pas modifier la requ\^ete de l'utilisateur en corrigeant automatiquement, dans le cas o\`u cet utilisateur recherche explicitement le mot mal orthographi\'e.
+Nous utilisons le correcteur orthographique language-tool, utilis\'e par libreOffice, qui affiche dans le terminal les possibilit\'es de correction d'un mot mal orthographi\'e. Nous avons d\'ecid\'e de ne pas modifier la requ\^ete de l'utilisateur en corrigeant automatiquement, dans le cas o\`u cet utilisateur recherche explicitement le mot mal orthographi\'e. En effet, ce choix nous a paru être le plus logique car, dans le cas où l'utilisateur rechercherait un nom propre, de site ou d'entreprise par exemple, il est probable que language-tool l'identifie comme une faute. De manière à répondre plus efficacement à ce critère, nous pourrions utiliser un dictionnaire plus performant et éventuellement qui puisse être étendues avec les termes recherchées.
 
+\section{Conclusion}
+
+Ce projet nous a permis de mettre en place un mini-moteur de recherche permettant ainsi de mettre en pratique les cours de recherche documentaire et ainsi de comprendre les différentes étapes de sa mise en place, néanmoins, cela a aussi soulevé un certain nombre de problématiques qui, pour un projet de plus grande envergure, impliqueraient plusieurs améliorations de notre moteur de recherche.
 
 \end{document}
