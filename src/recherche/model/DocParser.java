@@ -3,6 +3,7 @@ package recherche.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +41,13 @@ public class DocParser {
 	}
 
 	public List<Text> getTexts(final Map<String, List<Integer>> map) {
+		Map<String, List<Integer>> map2 = new HashMap<String, List<Integer>>(map);
 		final List<Text> list = new ArrayList<Text>();
 		for (final String filePath : map.keySet()) {
 			final File f = new File(filePath);
-			final List<Integer> positions = map.get(filePath);
+			System.out.println(map2.containsKey(filePath));
+			System.out.println(map2);
+			final List<Integer> positions = map2.get(filePath);
 			final Text text = prepareText(f, positions);
 			list.add(text);
 		}
